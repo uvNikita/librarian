@@ -1,4 +1,6 @@
 from flask import Flask, request
+from db.models import Book, Author
+from db import get_book_by_id
 
 app = Flask(__name__)
 
@@ -9,7 +11,8 @@ def main_page():
 
 @app.route("/b/<int:book_id>")
 def book_info(book_id):
-    return str(book_id)
+    book = get_book_by_id(book_id)
+    return "id=" + str(book.book_id) + " title=" + str(book.title)
 
 
 @app.route("/a/<int:author_id>")
