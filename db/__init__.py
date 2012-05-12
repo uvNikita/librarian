@@ -1,3 +1,4 @@
+import models
 from models import Book, Author
 
 def get_book_by_id(book_id):
