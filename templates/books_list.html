@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+{% block body %}
+    <ul class=entries>
+    {% for book in books %}
+    <li><h2>{{ book.title }}</h2>{{ book.authors[0].first_name }}
+    {% endfor %}
+    </ul>
+{% endblock %}

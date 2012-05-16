@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, g
 from db.models import Book, Author
 from db import get_book_by_id, get_books_by_author
 
@@ -8,6 +8,14 @@ app.config.from_object('config')
 
 def connect_db():
     return sqlite3.connect(app.config['DATABASE'])
+
+@app.before_request
+def before_request():
+    g.db = connect_db()
+
+@app.teardown_request
+def teardown_request(exception):
+    g.db.close()
 
 @app.route("/")
 def main_page():
@@ -24,9 +32,7 @@ def book_info(book_id):
 def author_books(author_id):
     books = get_books_by_author(author_id)
     res = ""
-    for book in books:
-        res += "title=" + book.title + "\n"
-    return str(author_id) + res
+    return render_template("books_list.html", books=books)
 
 
 @app.route("/search/<int:page>")
