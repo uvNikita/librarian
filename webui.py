@@ -1,13 +1,17 @@
-from flask import Flask, request
+import sqlite3
+from flask import Flask, request, render_template
 from db.models import Book, Author
 from db import get_book_by_id, get_books_by_author
 
 app = Flask(__name__)
 app.config.from_object('config')
 
+def connect_db():
+    return sqlite3.connect(app.config['DATABASE'])
+
 @app.route("/")
 def main_page():
-    return "hello from main page."
+    return render_template("main_page.html", name="asdf")
 
 
 @app.route("/b/<int:book_id>")
