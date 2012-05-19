@@ -1,4 +1,4 @@
-from flask import request, render_template, g
+from flask import request, render_template, g, abort
 
 from librarian import app
 
@@ -14,6 +14,8 @@ def main_page():
 def book_info(book_id):
     with Database() as db:
         book = db.get_book_by_id(book_id)
+        if not book:
+             abort(404)
     return render_template("book_info.html", book=book)
 
 
@@ -21,13 +23,17 @@ def book_info(book_id):
 def sequence_books(sequence_id):
     with Database() as db:
         books = db.get_sequence_books(sequence_id)
+        if not books:
+            abort(404)
     return render_template("sequence_books.html", books=books)
 
 
 @app.route("/a/<int:author_id>")
 def author_books(author_id):
     with Database() as db:
-        author =  db.get_author_by_id(author_id)
+        author = db.get_author_by_id(author_id)
+        if not author:
+            abort(404)
         books = db.get_books_by_author(author_id)
     return render_template("books_list.html", books=books, author=author)
 

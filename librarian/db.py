@@ -18,6 +18,8 @@ class Database(object):
         cursor = self.db.cursor()
         cursor.execute("SELECT book_id, book_title, annotation, sequence_id, sequence_number FROM book WHERE book_id = ?", (book_id,))
         book = cursor.fetchone()
+        if not book:
+            return None
         authors = []
         for book_author in cursor.execute("SELECT author_id FROM author_book WHERE book_id = ?", (book_id,)):
             authors += [self.get_author_by_id(book_author['author_id'])]
@@ -42,6 +44,8 @@ class Database(object):
         cursor = self.db.cursor()
         cursor.execute("SELECT author_id, first_name, last_name FROM author WHERE author_id = ?", (author_id,))
         author = cursor.fetchone()
+        if not author:
+            return None
         return Author(
             author_id=author['author_id'],
             first_name=author['first_name'],
