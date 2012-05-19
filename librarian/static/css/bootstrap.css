@@ -4187,6 +4187,11 @@ button.close {
 .hidden-desktop {
   display: none !important;
 }
+
+body {
+    padding-top: 45px;
+}
+
 @media (max-width: 767px) {
   .visible-phone {
     display: inherit !important;
