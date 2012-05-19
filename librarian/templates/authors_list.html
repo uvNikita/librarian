@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block body %}
+    <div>
+    {% for author in authors %}
+        <div class=row>
+            {{ author.first_name }} {{ author.last_name }}
+        
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
