@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 {% set path = [(url_for('main_page'), 'Home'), (url_for('author_books', author_id=author.author_id), author.last_name)] %}
 {% block body %}
-    <ul class=books_list>
     {% for book in books %}
-    <li><h2>{{ book.title }}</h2>{{ book.authors[0].first_name }}
+    <div class="well">
+        <strong> {{ book.title }} </strong> {{ book.sequence or "" }}
+    </div>
     {% endfor %}
-    </ul>
 {% endblock %}
