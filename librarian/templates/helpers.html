@@ -17,11 +17,19 @@
             </div>
 
             <div class="span3">
-                {{ book.authors[0].first_name + " " + book.authors[0].last_name if book.authors else "-" }}
+                {% if book.authors %}
+                    <a href="{{ url_for('author_books', author_id=book.authors[0].author_id) }}"> {{ book.authors[0].first_name + " " + book.authors[0].last_name }} </a>
+                {% else %}
+                    -
+                {% endif %}
             </div>
 
             <div class="span2">
-                {{ book.sequence.title if book.sequence else "-" }}
+                {% if book.sequence %}
+                    <a href="{{ url_for('sequence_books', sequence_id=book.sequence.sequence_id) }}"> {{ book.sequence.title }} </a>
+                {% else %}
+                    -
+                {% endif %}
             </div>
 
             <div class="span1">
