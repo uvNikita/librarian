@@ -39,7 +39,11 @@ class Database(object):
         )
 
     def get_books_by_author(self, author_id):
-        return [Book(1, "book title", [Author(author_id, "first name", "second name")], [], None, None, None)]
+        cursor = self.db.cursor()
+        books = []
+        for author_book in cursor.execute("SELECT book_id FROM author_book WHERE author_id = ? ", (author_id,)):
+            books += [self.get_book_by_id(author_book['book_id'])]
+        return books
 
     def add_book(self, book_id, title, author_ids, genres=[], sequence=None, annotation=None):
         authors = [get_author_by_id(author_id) for author_id in author_ids]
