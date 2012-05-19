@@ -5,18 +5,6 @@
     <div class=page-header>
         <h1>Books of {{ author.first_name }} {{author.last_name}} </h1>
     </div>
+{{ h.books_list(books) }}
 
-    {% for book in books %}
-    <div class="row well">
-        <div class="span3">
-            <strong> {{ book.title }} </strong>
-        </div>
-
-        <div class="span3">
-            {{ book.sequence.title if book.sequence else "" }}
-        </div>
-
-        {{ h.download_buttons(book.book_id, div_class="span3") }}
-    </div>
-    {% endfor %}
 {% endblock %}
