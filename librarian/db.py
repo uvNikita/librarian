@@ -18,10 +18,13 @@ class Database(object):
         cursor = self.db.cursor()
         cursor.execute("SELECT book_id, book_title, annotation, sequence, sequence_number FROM book WHERE book_id = ?", (book_id,))
         book = cursor.fetchone()
+        authors = []
+        for book_author in cursor.execute("SELECT author_id FROM author_book WHERE book_id = ?", (book_id,)):
+            authors += self.get_author_by_id(book_author['author_id'])
         return Book(
             book_id=book['book_id'],
             title=book['book_title'], 
-            authors=[Author(1, "first name", "second name")],
+            authors=authors,
             annotation=book['annotation'],
             sequence=book['sequence'],
             sequence_number=book['sequence_number'],
@@ -30,12 +33,12 @@ class Database(object):
 
     def get_author_by_id(self, author_id):
         cursor = self.db.cursor()
-        cursor.execute("SELECT author_id, first_name, last_name FROM book WHERE author_id = ?", (author_id,))
+        cursor.execute("SELECT author_id, first_name, last_name FROM author WHERE author_id = ?", (author_id,))
         author = cursor.fetchone()
         return Author(
             author_id=author['author_id'],
             first_name=author['first_name'],
-            last_name=author['second_name'],
+            last_name=author['last_name'],
         )
 
     def get_books_by_author(self, author_id):
