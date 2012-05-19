@@ -5,9 +5,24 @@
         <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bootstrap.css') }}">
     </head>
     <body>
+        <div class="navbar navbar-fixed-top">
+            <div class=navbar-inner>
+                <div class=container>
+                    <a class="brand" href="#"> Librarian </a>
+                    <div class="nav-collapse collapse">
+                        <ul class=nav>
+                            <li><a href="{{ url_for('main_page') }}"> Search </a>
+                            <li><a href="{{ url_for('main_page') }}"> Authors </a>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class=container>
             <h1>Librarian</h1>
             {% block body %}{% endblock %}
         </div>
+
+        <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
     </body>
 </html>
