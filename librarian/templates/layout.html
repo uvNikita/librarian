@@ -21,12 +21,13 @@
         
         <div class=container>
             <ul class="breadcrumb">
-                {% for path_elem, path_name in path[:-1] %}
-                    <li>
-                    <a href="{{ path_elem }}">{{ path_name }}</a> <span class="divider">/</span>
-                    </li>
+                {% for path_elem, path_name in path %}
+                    {% if not loop.last %}
+                        <li> <a href="{{ path_elem }}">{{ path_name }}</a> <span class="divider">/</span> </li>
+                    {% else %}
+                        <li class="active">{{ path_name }}</li>
+                    {% endif %}
                 {% endfor %}
-                <li class="active">{{ path[-1][1] }}</li>
             </ul>
 
             {% block title %}{% endblock %}
