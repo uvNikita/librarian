@@ -1,5 +1,5 @@
 import sqlite3
-from librarian.models import Book, Author
+from librarian.models import Book, Sequence, Author
 from librarian import app
 
 class Database(object):
@@ -16,7 +16,7 @@ class Database(object):
 
     def get_book_by_id(self, book_id):
         cursor = self.db.cursor()
-        cursor.execute("SELECT book_id, book_title, annotation, sequence, sequence_number FROM book WHERE book_id = ?", (book_id,))
+        cursor.execute("SELECT book_id, book_title, annotation, sequence_id, sequence_number FROM book WHERE book_id = ?", (book_id,))
         book = cursor.fetchone()
         authors = []
         for book_author in cursor.execute("SELECT author_id FROM author_book WHERE book_id = ?", (book_id,)):
@@ -24,12 +24,16 @@ class Database(object):
         genres = []
         for book_genre in cursor.execute("SELECT genre FROM book_genre WHERE book_id = ?", (book_id,)):
             genres += [book_genre['genre']]
+        sequence = None
+        if book['sequence_id']:
+            cursor.execute("SELECT title FROM sequence WHERE sequence_id = ?", (book['sequence_id'],))
+            sequence = Sequence(book['sequence_id'], cursor.fetchone()['title'])
         return Book(
             book_id=book['book_id'],
             title=book['book_title'], 
             authors=authors,
             annotation=book['annotation'],
-            sequence=book['sequence'],
+            sequence=sequence,
             sequence_number=book['sequence_number'],
             genres=genres
         )
@@ -49,6 +53,13 @@ class Database(object):
         books = []
         for author_book in cursor.execute("SELECT book_id FROM author_book WHERE author_id = ? ", (author_id,)):
             books += [self.get_book_by_id(author_book['book_id'])]
+        return books
+
+    def get_sequence_books(self, sequence_id):
+        cursor = self.db.cursor()
+        books = []
+        for sequence_book in cursor.execute("SELECT book_id FROM book WHERE sequence_id = ?", (sequence_id,)):
+            books += [self.get_book_by_id(sequence_book['book_id'])]
         return books
 
     def add_book(self, book_id, title, author_ids, genres=[], sequence=None, annotation=None):

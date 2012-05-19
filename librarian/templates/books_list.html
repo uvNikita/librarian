@@ -3,7 +3,7 @@
 {% block body %}
     {% for book in books %}
     <div class="well">
-        <strong> {{ book.title }} </strong> {{ book.sequence or "" }}
+        <strong> {{ book.title }} </strong> {{ book.sequence.title or "" }}
     </div>
     {% endfor %}
 {% endblock %}

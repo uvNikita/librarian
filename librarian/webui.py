@@ -17,6 +17,13 @@ def book_info(book_id):
     return render_template("book_info.html", book=book)
 
 
+@app.route("/s/<int:sequence_id>")
+def sequence_books(sequence_id):
+    with Database() as db:
+        books = db.get_sequence_books(sequence_id)
+    return render_template("sequence_books.html", books=books)
+
+
 @app.route("/a/<int:author_id>")
 def author_books(author_id):
     with Database() as db:
@@ -37,9 +44,11 @@ def search_results(page):
             return render_template('authors_list.html', authors=authors)
     return request.args.get('term', '')
 
+
 @app.route("/get_fb2/<int:book_id>")
 def get_fb2(book_id):
     return "fb2"
+
 
 @app.route("/get_fb2/<int:book_id>")
 def get_prc(book_id):
