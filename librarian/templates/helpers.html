@@ -1,8 +1,8 @@
 {% macro download_buttons(book_id, div_class="btn-toolbar") -%}
-    <span class="{{ div_class }}">
+    <div class="{{ div_class }}">
         <button class="btn btn-success" href="{{ url_for('get_fb2', book_id=book_id) }}">fb2</button>
         <button class="btn btn-primary" href="{{ url_for('get_prc', book_id=book_id) }}">prc</button>
-    </span>
+    </div>
 {%- endmacro %}
 
 {% macro books_list(books) -%}
@@ -16,7 +16,15 @@
                 {{ book.sequence.title if book.sequence else "" }}
             </div>
 
-            {{ download_buttons(book.book_id, div_class="span3") }}
+            <div class="span2">
+                {{ book.sequence.title if book.sequence else "" }}
+            </div>
+
+            <div class="span1">
+                <a class="btn btn-info" href="{{ url_for('book_info', book_id=book.book_id) }}">Info</a>
+            </div>
+
+            {{ download_buttons(book.book_id, div_class="span2") }}
         </div>
     {% endfor %}
 {%- endmacro %}
