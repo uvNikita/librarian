@@ -4,3 +4,19 @@
         <button class="btn btn-primary" href="{{ url_for('get_prc', book_id=book_id) }}">prc</button>
     </span>
 {%- endmacro %}
+
+{% macro books_list(books) -%}
+    {% for book in books %}
+        <div class="row well">
+            <div class="span3">
+                <strong> {{ book.title }} </strong>
+            </div>
+
+            <div class="span3">
+                {{ book.sequence.title if book.sequence else "" }}
+            </div>
+
+            {{ download_buttons(book.book_id, div_class="span3") }}
+        </div>
+    {% endfor %}
+{%- endmacro %}
