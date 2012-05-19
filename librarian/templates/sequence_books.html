@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% import "helpers.html" as h %} 
 {% set path = [
     (url_for('main_page'), 'Home'),
     (url_for('author_books', author_id=books[0].authors[0].author_id), books[0].authors[0].first_name + " " + books[0].authors[0].last_name),
@@ -6,9 +7,8 @@
 ]
 %}
 {% block body %}
-    {% for book in books %}
-    <div class="well">
-        <strong> {{ book.title }} </strong> {{ book.sequence.title or "" }}
+    <div class=page-header>
+        <h1>Books of {{ books[0].sequence.title }}</h1>
     </div>
-    {% endfor %}
+    {{ h.books_list(books) }}
 {% endblock %}
