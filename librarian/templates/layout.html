@@ -18,7 +18,19 @@
                 </div>
             </div>
         </div>
+        
         <div class=container>
+            {% block title %}{% endblock %}
+            <form name="search_form" action="{{ url_for('search_results') }}" method="get" accept-charset="UTF-8" class="well form-search">
+                  <input value="" name="term" type="text" class="input-large search-query" />
+                  <select value='all' name='type'>
+                      <option value='all'>Everywhere</option>
+                      <option value='authors'>Authors</option>
+                      <option value='books'>Book</option>
+                  </select>
+                  <button type="submit" class=btn>Search</button>
+            </form>
+
             {% block body %}{% endblock %}
         </div>
 
