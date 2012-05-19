@@ -11,15 +11,19 @@
         <div class="span4">
             <h1>{{ book.authors[0].first_name }} {{ book.authors[0].last_name }}</h1>
         </div>
-        <div class="span4">
-            <h3>{{ book.sequence }} # {{ book.sequence_number }}</h3>
-        </div>
+        {% if book.sequence %}
+            <div class="span4">
+                <h3>{{ book.sequence }} # {{ book.sequence_number }}</h3>
+            </div>
+        {% endif %}
     </div>
-    <p> <blockquote> {{ book.annotation }} </blockquote> </p>
+    {% if book.annotation %}
+        <p> <blockquote> {{ book.annotation }} </blockquote> </p>
+    {% endif %}
     <p>
         <div class="btn-toolbar" style="margin-top: 18px;">
-            <button class="btn btn-success" href="#">fb2</button>
-            <button class="btn btn-primary" href="#">prc</button>
+            <button class="btn btn-success" href="{{ url_for('get_fb2', book_id=book.book_id) }}">fb2</button>
+            <button class="btn btn-primary" href="{{ url_for('get_prc', book_id=book.book_id) }}">prc</button>
         </div>
     </p>
 {% endblock %}

@@ -18,9 +18,9 @@
                 </div>
             </div>
         </div>
+        
         <div class=container>
             <ul class="breadcrumb">
-
                 {% for path_elem, path_name in path[:-1] %}
                     <li>
                     <a href="{{ path_elem }}">{{ path_name }}</a> <span class="divider">/</span>
@@ -28,6 +28,19 @@
                 {% endfor %}
                 <li class="active">{{ path[-1][1] }}</li>
             </ul>
+
+            {% block title %}{% endblock %}
+
+            <form name="search_form" action="{{ url_for('search_results') }}" method="get" accept-charset="UTF-8" class="well form-search">
+                  <input value="" name="term" type="text" class="input-large search-query" />
+                  <select value='all' name='type'>
+                      <option value='all'>Everywhere</option>
+                      <option value='authors'>Authors</option>
+                      <option value='books'>Book</option>
+                  </select>
+                  <button type="submit" class=btn>Search</button>
+            </form>
+
             {% block body %}{% endblock %}
         </div>
 

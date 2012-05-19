@@ -36,3 +36,11 @@ def search_results(page):
             authors = [db.get_author_by_id(1), db.get_author_by_id(1)]
             return render_template('authors_list.html', authors=authors)
     return request.args.get('term', '')
+
+@app.route("/get_fb2/<int:book_id>")
+def get_fb2(book_id):
+    return "fb2"
+
+@app.route("/get_fb2/<int:book_id>")
+def get_prc(book_id):
+    return "fb2"
