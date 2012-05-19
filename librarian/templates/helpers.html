@@ -8,16 +8,20 @@
 {% macro books_list(books) -%}
     {% for book in books %}
         <div class="row well">
-            <div class="span3">
+            <div class="span1">
+                <strong> {{ book.sequence_number or "-" }} </strong>
+            </div>
+
+            <div class="span2">
                 <strong> {{ book.title }} </strong>
             </div>
 
             <div class="span3">
-                {{ book.sequence.title if book.sequence else "" }}
+                {{ book.authors[0].first_name + " " + book.authors[0].last_name if book.authors else "-" }}
             </div>
 
             <div class="span2">
-                {{ book.sequence.title if book.sequence else "" }}
+                {{ book.sequence.title if book.sequence else "-" }}
             </div>
 
             <div class="span1">
