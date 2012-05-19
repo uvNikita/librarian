@@ -3,12 +3,12 @@
 
 {% set path = [
     (url_for('main_page'), 'Home'),
-    (url_for('author_books', author_id=author.author_id), author.first_name + " " + author.last_name)
+    (url_for('main_page'), search_term),
 ] %}
 
 {% block body %}
     <div class=page-header>
-        <h1>Books of {{ author.first_name }} {{author.last_name}} </h1>
+        <h1>Books of {{ search_term }}</h1>
     </div>
 {{ h.books_list(books) }}
 

@@ -66,6 +66,16 @@ class Database(object):
             books += [self.get_book_by_id(sequence_book['book_id'])]
         return books
 
+    def search_by_title(self, title):
+        cursor = self.db.cursor()
+        books = []
+        title = title.lower()
+        title = title.replace(' ', '%')
+        title = '%' + title + '%'
+        for book in cursor.execute("SELECT book_id FROM book WHERE book_title LIKE ?", (title,)):
+            books += [self.get_book_by_id(book['book_id'])]
+        return books
+
     def add_book(self, book_id, title, author_ids, genres=[], sequence=None, annotation=None):
         authors = [get_author_by_id(author_id) for author_id in author_ids]
         return Book(book_id, title, authors, genres, sequence, annotation)
