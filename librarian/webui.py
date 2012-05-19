@@ -25,6 +25,7 @@ def author_books(author_id):
     return render_template("books_list.html", books=books)
 
 
+@app.route("/search", defaults={'page': 1})
 @app.route("/search/<int:page>")
 def search_results(page):
     return request.args.get('term', '')
