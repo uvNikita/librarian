@@ -48,11 +48,11 @@ def search_results(page):
     if search_type == 'authors':
         with Database() as db:
             authors = [db.get_author_by_id(1), db.get_author_by_id(1)]
-            return render_template('authors_list.html', authors=authors, search_term=search_term)
+            return render_template('authors_list.html', authors=authors, search_term=search_term, search_type=search_type)
     if search_type == 'books':
         with Database() as db:
             books = db.search_by_title(search_term)
-            return render_template('books_search_result.html', books=books, search_term=search_term)
+            return render_template('books_search_result.html', books=books, search_term=search_term, search_type=search_type)
     return search_term
 
 

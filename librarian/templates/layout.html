@@ -34,12 +34,12 @@
 
             <form name="search_form" action="{{ url_for('search_results') }}" method="get" accept-charset="UTF-8" class="well form-search">
                 Search me the
-                <input value="" name="term" type="text" class="input-large search-query" />
+                <input value="{{ search_term if search_term is defined else '' }}" name="term" type="text" class="input-large search-query" />
                 in
-                <select value='all' name='type'>
-                    <option value='all'>Everywhere</option>
-                    <option value='authors'>Authors</option>
-                    <option value='books'>Book</option>
+                <select name='type'>
+                    <option value='all' {{ 'selected' if search_type == 'all' else '' }} >Everywhere</option>
+                    <option value='authors' {{ 'selected' if search_type == 'authors' else '' }} >Authors</option>
+                    <option value='books' {{ 'selected' if search_type == 'books' else '' }} >Book</option>
                 </select>
                 <button type="submit" class=btn>Search</button>
             </form>
