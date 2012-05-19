@@ -21,6 +21,9 @@ class Database(object):
         authors = []
         for book_author in cursor.execute("SELECT author_id FROM author_book WHERE book_id = ?", (book_id,)):
             authors += [self.get_author_by_id(book_author['author_id'])]
+        genres = []
+        for book_genre in cursor.execute("SELECT genre FROM book_genre WHERE book_id = ?", (book_id,)):
+            genres += [book_genre['genre']]
         return Book(
             book_id=book['book_id'],
             title=book['book_title'], 
@@ -28,7 +31,7 @@ class Database(object):
             annotation=book['annotation'],
             sequence=book['sequence'],
             sequence_number=book['sequence_number'],
-            genres=[]
+            genres=genres
         )
 
     def get_author_by_id(self, author_id):
