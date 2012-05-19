@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block body %}
+    <div class="row">
+        <div class="span4">
+            <h2>{{ book.title }}</h2>
+        </div>
+        <div class="span4">
+            <h1>{{ book.authors[0].first_name }} {{ book.authors[0].last_name }}</h1>
+        </div>
+        <div class="span4">
+            <h3>{{ book.sequence }} # {{ book.sequence_number }}</h3>
+        </div>
+    </div>
+    <p> <blockquote> {{ book.annotation }} </blockquote> </p>
+    <p>
+        <div class="btn-toolbar" style="margin-top: 18px;">
+            <button class="btn btn-success" href="#">fb2</button>
+            <button class="btn btn-primary" href="#">prc</button>
+        </div>
+    </p>
+{% endblock %}

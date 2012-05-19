@@ -20,7 +20,7 @@ class Database(object):
         book = cursor.fetchone()
         authors = []
         for book_author in cursor.execute("SELECT author_id FROM author_book WHERE book_id = ?", (book_id,)):
-            authors += self.get_author_by_id(book_author['author_id'])
+            authors += [self.get_author_by_id(book_author['author_id'])]
         return Book(
             book_id=book['book_id'],
             title=book['book_title'], 
