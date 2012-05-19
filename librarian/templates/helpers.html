@@ -1,5 +1,5 @@
-{% macro download_buttons(book_id) -%}
-    <span class="btn-toolbar" style="margin-top: 18px;">
+{% macro download_buttons(book_id, div_class="btn-toolbar") -%}
+    <span class="{{ div_class }}">
         <button class="btn btn-success" href="{{ url_for('get_fb2', book_id=book_id) }}">fb2</button>
         <button class="btn btn-primary" href="{{ url_for('get_prc', book_id=book_id) }}">prc</button>
     </span>
