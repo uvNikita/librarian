@@ -1,11 +1,14 @@
 {% extends "layout.html" %}
 {% set path = [(url_for('main_page'), 'Home')] %}
 {% block body %}
+    <div class="page-header">
+        <h1>Authors found by {{ search_term }} </h1>
+    </div>
+
     <div>
     {% for author in authors %}
-        <div class=row>
+        <div class="row well">
             {{ author.first_name }} {{ author.last_name }}
-        
         </div>
     {% endfor %}
     </div>

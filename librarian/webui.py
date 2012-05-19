@@ -36,13 +36,14 @@ def author_books(author_id):
 @app.route("/search/<int:page>")
 def search_results(page):
     search_type = request.args.get('type', 'all')
+    search_term = request.args.get('term', '')
     if search_type not in ('all', 'authors', 'books'):
         search_type = 'all'
     if search_type == 'authors':
         with Database() as db:
             authors = [db.get_author_by_id(1), db.get_author_by_id(1)]
-            return render_template('authors_list.html', authors=authors)
-    return request.args.get('term', '')
+            return render_template('authors_list.html', authors=authors, search_term=search_term)
+    return search_term
 
 
 @app.route("/get_fb2/<int:book_id>")
