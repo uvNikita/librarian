@@ -1,7 +1,13 @@
 <!doctype html>
-<title>Librarian</title>
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bootstrap.css') }}">
-<div class=container>
-  <h1>Librarian</h1>
-  {% block body %}{% endblock %}
-</div>
+<html>
+    <head>
+        <title>Librarian</title>
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    </head>
+    <body>
+        <div class=container>
+            <h1>Librarian</h1>
+            {% block body %}{% endblock %}
+        </div>
+    </body>
+</html>
