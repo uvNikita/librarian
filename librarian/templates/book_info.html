@@ -1,4 +1,8 @@
 {% extends "layout.html" %}
+{% set path = [(url_for('main_page'), 'Home'),
+(url_for('author_books', author_id=book.authors[0].author_id), book.authors[0].last_name),
+(url_for('book_info', book_id=book.book_id), book.title)]
+%}
 {% block body %}
     <div class="row">
         <div class="span4">

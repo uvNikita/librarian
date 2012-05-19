@@ -19,6 +19,15 @@
             </div>
         </div>
         <div class=container>
+            <ul class="breadcrumb">
+
+                {% for path_elem, path_name in path[:-1] %}
+                    <li>
+                    <a href="{{ path_elem }}">{{ path_name }}</a> <span class="divider">/</span>
+                    </li>
+                {% endfor %}
+                <li class="active">{{ path[-1][1] }}</li>
+            </ul>
             {% block body %}{% endblock %}
         </div>
 

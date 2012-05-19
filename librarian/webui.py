@@ -20,9 +20,9 @@ def book_info(book_id):
 @app.route("/a/<int:author_id>")
 def author_books(author_id):
     with Database() as db:
+        author =  db.get_author_by_id(author_id)
         books = db.get_books_by_author(author_id)
-    res = ""
-    return render_template("books_list.html", books=books)
+    return render_template("books_list.html", books=books, author=author)
 
 
 @app.route("/search", defaults={'page': 1})
