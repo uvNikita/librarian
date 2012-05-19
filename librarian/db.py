@@ -19,9 +19,9 @@ class Database(object):
         cursor.execute("SELECT book_id, book_title, annotation, sequence, sequence_number FROM book WHERE book_id = ?", (book_id,))
         book = cursor.fetchone()
         return Book(
-            book['book_id'],
-            book['book_title'], 
-            [Author(1, "first name", "second name")],
+            book_id=book['book_id'],
+            title=book['book_title'], 
+            authors=[Author(1, "first name", "second name")],
             annotation=book['annotation'],
             sequence=book['sequence'],
             sequence_number=book['sequence_number'],
