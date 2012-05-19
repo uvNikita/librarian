@@ -14,7 +14,7 @@ def main_page():
 def book_info(book_id):
     with Database() as db:
         book = db.get_book_by_id(book_id)
-    return "id=" + str(book.book_id) + " title=" + str(book.title)
+    return render_template("book_info.html", book=book)
 
 
 @app.route("/a/<int:author_id>")
