@@ -16,6 +16,13 @@
     {% if book.annotation %}
         <p> <blockquote> {{ book.annotation }} </blockquote> </p>
     {% endif %}
+    
+    {% if book.genres %}
+        {% for genre in book.genres %}
+           <span class="label label-inverse">{{ genre }}</span> 
+        {% endfor %}
+    {% endif %}
+
     <p>
         <div class="btn-toolbar" style="margin-top: 18px;">
             <button class="btn btn-success" href="{{ url_for('get_fb2', book_id=book.book_id) }}">fb2</button>
