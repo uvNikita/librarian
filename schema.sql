@@ -1,4 +1,4 @@
-CREATE TABLE book(book_id INTEGER PRIMARY KEY, book_title TEXT NOT NULL, annotation TEXT, sequence TEXT);
+CREATE TABLE book(book_id INTEGER PRIMARY KEY, book_title TEXT NOT NULL, annotation TEXT, sequence TEXT, sequence_number INTEGER);
 
 CREATE TABLE author(author_id INTEGER PRIMARY KEY AUTOINCREMENT, first_name TEXT NOT NULL, last_name TEXT NOT NULL);
 
