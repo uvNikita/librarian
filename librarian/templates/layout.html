@@ -42,6 +42,7 @@
                     <option value='books' {{ 'selected' if search_type == 'books' else '' }} >Book</option>
                 </select>
                 <button type="submit" class=btn>Search</button>
+                <input value="{{ curr_author_id }}" name="curr_author_id" type="text" class="invisible" />
             </form>
 
             {% block body %}{% endblock %}
