@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% import "helpers.html" as h %} 
+
+{% set path = [(url_for('main_page'), 'Home')] %}
+{% set chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'] %}
+
+{% block body %}
+    {% if not first_letter %}
+        {% for char in chars %}
+            <a class="btn btn-info" href="{{ url_for('authors', first_letter=char) }}">{{ char.upper() }}</a>
+        {% endfor %}
+    {% endif %}
+
+    {% if first_letter and not second_letter %}
+        {% for char in chars %}
+            <a class="btn btn-info" href="{{ url_for('authors', first_letter=first_letter, second_letter=char) }}">{{ first_letter.upper() + char }}</a>
+        {% endfor %}
+    {% endif %}
+
+    {% if authors %}
+        {{ h.authors_list(authors) }}
+    {% endif %}
+{% endblock %}

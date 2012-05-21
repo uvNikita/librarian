@@ -55,6 +55,16 @@ def search_results(page):
             return render_template('books_search_result.html', books=books, search_term=search_term, search_type=search_type)
     return search_term
 
+@app.route("/authors/")
+def authors():
+    first_letter = request.args.get('first_letter')
+    second_letter = request.args.get('second_letter')
+    authors = None
+    if first_letter and second_letter:
+        with Database() as db:
+            authors = db.search_authors_starting_from(first_letter + second_letter)
+    return render_template('authors_chooser.html', first_letter=first_letter, second_letter=second_letter, authors=authors)
+
 
 @app.route("/get_fb2/<int:book_id>")
 def get_fb2(book_id):
