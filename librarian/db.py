@@ -76,6 +76,15 @@ class Database(object):
             books += [self.get_book_by_id(book['book_id'])]
         return books
 
+    def search_authors_starting_from(self, prefix):
+        cursor = self.db.cursor()
+        prefix = prefix.lower()
+        prefix += '%'
+        authors = []
+        for author in cursor.execute("SELECT author_id FROM author WHERE last_name LIKE ?", (prefix,)):
+            authors += [self.get_author_by_id(author['author_id'])]
+        return authors
+
     def add_book(self, book_id, title, author_ids, genres=[], sequence=None, annotation=None):
         authors = [get_author_by_id(author_id) for author_id in author_ids]
         return Book(book_id, title, authors, genres, sequence, annotation)
