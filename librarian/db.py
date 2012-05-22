@@ -3,11 +3,14 @@ from librarian.models import Book, Sequence, Author
 from librarian import app
 
 class Database(object):
-    def __init__(self):
-        pass
+    def __init__(self, db_path=None):
+        if db_path:
+            self.db_path = db_path
+        else:
+            self.db_path = app.config['DATABASE']
 
     def __enter__(self):
-        self.db = sqlite3.connect(app.config['DATABASE'])
+        self.db = sqlite3.connect(self.db_path)
         self.db.row_factory = sqlite3.Row
         return self
 
@@ -91,9 +94,37 @@ class Database(object):
             authors += [self.get_author_by_id(author['author_id'])]
         return authors
 
-    def add_book(self, book_id, title, author_ids, genres=[], sequence=None, annotation=None):
-        authors = [get_author_by_id(author_id) for author_id in author_ids]
-        return Book(book_id, title, authors, genres, sequence, annotation)
+    def add_book(self, book):
+        cursor = self.db.cursor()
+
+        cursor.execute('select sequence_id from sequence where title=?', (book.sequence.title,))
+        sequence_row = cursor.fetchone()
+        if sequence_row:
+            sequence_id = sequence_row['sequence_id']
+        else:
+            cursor.execute('insert into sequence (title) values(?)', (book.sequence.title,))
+            sequence_id = cursor.lastrowid
+
+        cursor.execute('insert into book values (:book_id, :title, :annotation, :sequence_id, :sequence_number)', {
+            'book_id': book.book_id, 'title': book.title,
+            'annotation': book.annotation, 'sequence_id': sequence_id,
+            'sequence_number': book.sequence_number
+        })
+
+        #authors
+        for author in book.authors:
+            cursor.execute('select author_id from author where first_name=? and last_name=?', (author.first_name, author.last_name))
+            author_row = cursor.fetchone()
+            if author_row:
+                author_id = author_row['author_id']
+            else:
+                cursor.execute('insert into author (first_name, last_name) values (?, ?)', (author.first_name, author.last_name))
+                author_id = cursor.lastrowid
+            cursor.execute('insert into author_book values(?, ?)', (author_id, book.book_id))
+
+        for genre in book.genres:
+            cursor.execute('insert into book_genre values(?, ?)', (book.book_id, genre))
+        self.db.commit()
 
     def add_author(self, first_name, last_name):
         return Author(1, first_name, last_name)
