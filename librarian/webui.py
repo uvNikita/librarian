@@ -1,8 +1,9 @@
-from flask import request, render_template, g, abort, send_from_directory
+from zipfile import ZipFile
+from os import listdir, path
+
+from flask import request, render_template, abort, send_from_directory
 
 from librarian import app
-
-from librarian.models import Book, Author
 from librarian.db import Database
 
 
@@ -71,12 +72,7 @@ def authors():
 
 @app.route("/get_fb2/<int:book_id>")
 def get_fb2(book_id):
-    from zipfile import ZipFile
-    from os import listdir
-    # import pdb
-    # pdb.set_trace()
-
-    lib_path = app.config['PATH_TO_LIBRARY'] 
+    lib_path = app.config['PATH_TO_LIBRARY']
     tmp_folder = app.config['TEMPORARY_FOLDER']
     zips = [f for f in listdir(lib_path) if f.endswith('.zip')]
     ranges = [zip.split('-') for zip in zips]
@@ -88,8 +84,8 @@ def get_fb2(book_id):
         found = ranges[i][0] <= book_id <= ranges[i][1]
     curr_zip = zips[i]
 
-    filename = str(book_id) + '.fb2'
-    with ZipFile(lib_path + curr_zip, 'r') as zip_file:
+    filename = '{name}.fb2'.format(name=book_id)
+    with ZipFile(path.join(lib_path, curr_zip), 'r') as zip_file:
         zip_file.extract(filename, tmp_folder)
     return send_from_directory(tmp_folder, filename, as_attachment=True)
 
