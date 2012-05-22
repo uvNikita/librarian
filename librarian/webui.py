@@ -1,9 +1,10 @@
-from flask import request, render_template, g, abort
+from flask import request, render_template, g, abort, send_from_directory
 
 from librarian import app
 
 from librarian.models import Book, Author
 from librarian.db import Database
+
 
 @app.route("/")
 def main_page():
@@ -56,6 +57,7 @@ def search_results(page):
             return render_template('books_search_result.html', books=books, search_term=search_term, search_type=search_type)
     return search_term
 
+
 @app.route("/authors/")
 def authors():
     first_letter = request.args.get('first_letter')
@@ -69,7 +71,27 @@ def authors():
 
 @app.route("/get_fb2/<int:book_id>")
 def get_fb2(book_id):
-    return "fb2"
+    from zipfile import ZipFile
+    from os import listdir
+    # import pdb
+    # pdb.set_trace()
+
+    lib_path = app.config['PATH_TO_LIBRARY'] 
+    tmp_folder = app.config['TEMPORARY_FOLDER']
+    zips = [f for f in listdir(lib_path) if f.endswith('.zip')]
+    ranges = [zip.split('-') for zip in zips]
+    ranges = [[int(r[1]), int(r[2][:-4])] for r in ranges]
+    i = 0
+    found = ranges[i][0] <= book_id <= ranges[i][1]
+    while not found:
+        i += 1
+        found = ranges[i][0] <= book_id <= ranges[i][1]
+    curr_zip = zips[i]
+
+    filename = str(book_id) + '.fb2'
+    with ZipFile(lib_path + curr_zip, 'r') as zip_file:
+        zip_file.extract(filename, tmp_folder)
+    return send_from_directory(tmp_folder, filename, as_attachment=True)
 
 
 @app.route("/get_fb2/<int:book_id>")
