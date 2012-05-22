@@ -75,14 +75,15 @@ def get_fb2(book_id):
     lib_path = app.config['PATH_TO_LIBRARY']
     tmp_folder = app.config['TEMPORARY_FOLDER']
     zips = [f for f in listdir(lib_path) if f.endswith('.zip')]
-    ranges = [zip.split('-') for zip in zips]
+    ranges = [zip_file.split('-') for zip_file in zips]
     ranges = [[int(r[1]), int(r[2][:-4])] for r in ranges]
-    i = 0
-    found = ranges[i][0] <= book_id <= ranges[i][1]
-    while not found:
-        i += 1
-        found = ranges[i][0] <= book_id <= ranges[i][1]
-    curr_zip = zips[i]
+    curr_zip = None
+    for range, zip_file in zip(ranges, zips):
+        if range[0] <= book_id <= range[1]:
+            curr_zip = zip_file
+            break
+    if not curr_zip:
+        abort(404)
 
     filename = '{name}.fb2'.format(name=book_id)
     with ZipFile(path.join(lib_path, curr_zip), 'r') as zip_file:
@@ -90,6 +91,6 @@ def get_fb2(book_id):
     return send_from_directory(tmp_folder, filename, as_attachment=True)
 
 
-@app.route("/get_fb2/<int:book_id>")
+@app.route("/get_prc/<int:book_id>")
 def get_prc(book_id):
-    return "fb2"
+    return "prc"
