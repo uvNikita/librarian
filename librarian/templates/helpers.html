@@ -1,7 +1,7 @@
 {% macro download_buttons(book_id, div_class="btn-toolbar") -%}
     <div class="{{ div_class }}">
-        <button class="btn btn-success" href="{{ url_for('get_fb2', book_id=book_id) }}">fb2</button>
-        <button class="btn btn-primary" href="{{ url_for('get_prc', book_id=book_id) }}">prc</button>
+        <a class="btn btn-success" href="{{ url_for('get_fb2', book_id=book_id) }}">fb2</a>
+        <a class="btn btn-primary" href="{{ url_for('get_prc', book_id=book_id) }}">prc</a>
     </div>
 {%- endmacro %}
 
