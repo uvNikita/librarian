@@ -9,7 +9,7 @@ from librarian.db import Database
 
 @app.route("/")
 def main_page():
-    return render_template("main_page.html", name="asdf")
+    return render_template("main_page.html")
 
 
 @app.route("/b/<int:book_id>")
