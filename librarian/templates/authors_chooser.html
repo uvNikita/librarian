@@ -2,19 +2,35 @@
 {% import "helpers.html" as h %} 
 
 {% set path = [(url_for('main_page'), 'Home')] %}
-{% set chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'] %}
+{% set eng_chars = 'abcdefghijklmnopqrstuvwxyz' %}
+{% set rus_chars = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя' %}
 
 {% block body %}
     {% if not first_letter %}
-        {% for char in chars %}
+        <p>
+        {% for char in eng_chars %}
             <a class="btn btn-info" href="{{ url_for('authors', first_letter=char) }}">{{ char.upper() }}</a>
         {% endfor %}
+        </p>
+
+        <p>
+        {% for char in rus_chars %}
+            <a class="btn btn-info" href="{{ url_for('authors', first_letter=char) }}">{{ char.upper() }}</a>
+        {% endfor %}
+        </p>
     {% endif %}
 
     {% if first_letter and not second_letter %}
-        {% for char in chars %}
-            <a class="btn btn-info" href="{{ url_for('authors', first_letter=first_letter, second_letter=char) }}">{{ first_letter.upper() + char }}</a>
-        {% endfor %}
+        {% if first_letter in eng_chars %}
+            {% for char in eng_chars %}
+                <a class="btn btn-info" href="{{ url_for('authors', first_letter=first_letter, second_letter=char) }}">{{ first_letter.upper() + char }}</a>
+            {% endfor %}
+        {% endif %}
+        {% if first_letter in rus_chars %}
+            {% for char in rus_chars %}
+                <a class="btn btn-info" href="{{ url_for('authors', first_letter=first_letter, second_letter=char) }}">{{ first_letter.upper() + char }}</a>
+            {% endfor %}
+        {% endif %}
     {% endif %}
 
     {% if authors %}
