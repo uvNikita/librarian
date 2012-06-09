@@ -2,8 +2,8 @@
 {% import "helpers.html" as h %} 
 {% set path = [
     (url_for('main_page'), 'Home'),
-    (url_for('author_books', author_id=books[0].authors[0].author_id), books[0].authors[0].first_name + " " + books[0].authors[0].last_name),
-    (url_for('sequence_books', sequence_id=books[0].sequence.sequence_id), books[0].sequence.title)
+    (url_for('author_books', author_id=books[0].authors[0].id), books[0].authors[0].first_name + " " + books[0].authors[0].last_name),
+    (url_for('sequence_books', sequence_id=books[0].sequence.id), books[0].sequence.title)
 ]
 %}
 {% block body %}

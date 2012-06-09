@@ -2,8 +2,8 @@
 {% import "helpers.html" as h %}
 {% set path = [
     (url_for('main_page'), 'Home'),
-    (url_for('author_books', author_id=book.authors[0].author_id), book.authors[0].first_name + " " + book.authors[0].last_name),
-    (url_for('book_info', book_id=book.book_id), book.title)
+    (url_for('author_books', author_id=book.authors[0].id), book.authors[0].first_name + " " + book.authors[0].last_name),
+    (url_for('book_info', book_id=book.id), book.title)
 ] %}
 {% block body %}
     <div class="row">
@@ -26,12 +26,12 @@
     <p>
     {% if book.genres %}
         {% for genre in book.genres %}
-           <span class="label label-inverse">{{ genre }}</span> 
+           <span class="label label-inverse">{{ genre.title }}</span> 
         {% endfor %}
     {% endif %}
     </p>
 
     <p>
-        {{ h.download_buttons(book.book_id) }}
+        {{ h.download_buttons(book.id) }}
     </p>
 {% endblock %}

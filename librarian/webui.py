@@ -4,7 +4,7 @@ from os import listdir, path
 from flask import request, render_template, abort, send_from_directory
 
 from librarian import app
-from librarian.db import Database
+from librarian.models import Book, Author
 
 
 @app.route("/")
@@ -14,30 +14,26 @@ def main_page():
 
 @app.route("/b/<int:book_id>")
 def book_info(book_id):
-    with Database() as db:
-        book = db.get_book_by_id(book_id)
-        if not book:
-             abort(404)
+    book = Book.query.filter_by(id=book_id).first()
+    if not book:
+         abort(404)
     return render_template("book_info.html", book=book)
 
 
 @app.route("/s/<int:sequence_id>")
 def sequence_books(sequence_id):
-    with Database() as db:
-        books = db.get_sequence_books(sequence_id)
-        if not books:
-            abort(404)
+    books = Book.query.filter_by(sequence_id=sequence_id)
+    if not books:
+        abort(404)
     return render_template("sequence_books.html", books=books)
 
 
 @app.route("/a/<int:author_id>")
 def author_books(author_id):
-    with Database() as db:
-        author = db.get_author_by_id(author_id)
-        if not author:
-            abort(404)
-        books = db.get_books_by_author(author_id)
-    return render_template("books_list.html", books=books, author=author)
+    author = Author.query.filter_by(id=author_id).first()
+    if not author:
+        abort(404)
+    return render_template("books_list.html", author=author)
 
 
 @app.route("/search", defaults={'page': 1})
@@ -49,13 +45,11 @@ def search_results(page):
     if search_type not in ('all', 'authors', 'books'):
         search_type = 'all'
     if search_type == 'authors':
-        with Database() as db:
-            authors = [db.get_author_by_id(1), db.get_author_by_id(1)]
-            return render_template('authors_list.html', authors=authors, search_term=search_term, search_type=search_type)
+        authors = Author.query.limit(10)
+        return render_template('authors_list.html', authors=authors, search_term=search_term, search_type=search_type)
     if search_type == 'books':
-        with Database() as db:
-            books = db.search_by_title(search_term, author_id=curr_author_id)
-            return render_template('books_search_result.html', books=books, search_term=search_term, search_type=search_type)
+        books = Book.search_by_title(search_term)
+        return render_template('books_search_result.html', books=books, search_term=search_term, search_type=search_type)
     return search_term
 
 
@@ -65,8 +59,7 @@ def authors():
     second_letter = request.args.get('second_letter')
     authors = None
     if first_letter and second_letter:
-        with Database() as db:
-            authors = db.search_authors_starting_from(first_letter + second_letter)
+        authors = Author.search_starting_from(first_letter + second_letter)
     return render_template('authors_chooser.html', first_letter=first_letter, second_letter=second_letter, authors=authors)
 
 

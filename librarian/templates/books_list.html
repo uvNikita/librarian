@@ -3,15 +3,15 @@
 
 {% set path = [
     (url_for('main_page'), 'Home'),
-    (url_for('author_books', author_id=author.author_id), author.first_name + " " + author.last_name)
+    (url_for('author_books', author_id=author.id), author.first_name + " " + author.last_name)
 ] %}
 
-{% set curr_author_id = author.author_id %}
+{% set curr_author_id = author.id %}
 
 {% block body %}
     <div class=page-header>
         <h1>Books of {{ author.first_name }} {{author.last_name}} </h1>
     </div>
-{{ h.books_list(books) }}
+{{ h.books_list(author.books) }}
 
 {% endblock %}
