@@ -41,7 +41,7 @@ class Database(object):
             sequence = Sequence(book['sequence_id'], self.cursor.fetchone()['title'])
         return Book(
             book_id=book['book_id'],
-            title=book['book_title'], 
+            title=book['book_title'],
             authors=authors,
             annotation=book['annotation'],
             sequence=sequence,
