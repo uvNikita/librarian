@@ -52,13 +52,18 @@ def search_results(page):
             'authors_list.html',
             authors=authors,
             search_term=search_term,
-            search_type=search_type,
-            curr_author_id=curr_author_id
+            search_type=search_type
         )
     if search_type == 'books':
         books = Book.search_by_title(search_term)
         books_pager = books.paginate(page, ITEMS_PER_PAGE)
-        return render_template('books_search_result.html', books_pager=books_pager, search_term=search_term, search_type=search_type)
+        return render_template(
+            'books_search_result.html',
+            books_pager=books_pager,
+            search_term=search_term,
+            search_type=search_type,
+            curr_author_id=curr_author_id
+        )
     return search_term
 
 
