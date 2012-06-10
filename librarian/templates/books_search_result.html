@@ -10,6 +10,8 @@
     <div class=page-header>
         <h1>Books of {{ search_term }}</h1>
     </div>
-{{ h.books_list(books) }}
+{{ h.books_list(books_pager.items) }}
+
+{{h.render_pagination(books_pager, 'search_results', term=search_term, type='books', curr_author_id=curr_author_id) }}
 
 {% endblock %}

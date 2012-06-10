@@ -53,3 +53,21 @@
         </div>
     {% endfor %}
 {%- endmacro %}
+
+{% macro render_pagination(pagination, endpoint) %}
+    <div class=pagination>
+        <ul>
+            {%- for page in pagination.iter_pages(left_edge=1, left_current=1, right_current=1, right_edge=1) %}
+                {% if page %}
+                    {% if page != pagination.page %}
+                        <li><a href="{{ url_for(endpoint, page=page, **kwargs) }}">{{ page }}</a></li>
+                    {% else %}
+                        <li class='active'><a href="#">{{ page }} </a></li>
+                    {% endif %}
+                {% else %}
+                    <li class="disabled"><a href="#">…</a></li>
+                {% endif %}
+            {%- endfor %}
+        </ul>
+    </div>
+{% endmacro %}

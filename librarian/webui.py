@@ -7,6 +7,8 @@ from librarian import app
 from librarian.models import Book, Author
 
 
+ITEMS_PER_PAGE = 1
+
 @app.route("/")
 def main_page():
     return render_template("main_page.html")
@@ -37,7 +39,7 @@ def author_books(author_id):
 
 
 @app.route("/search", defaults={'page': 1})
-@app.route("/search/<int:page>")
+@app.route("/search/p<int:page>")
 def search_results(page):
     search_type = request.args.get('type', 'all')
     search_term = request.args.get('term', '')
@@ -46,10 +48,17 @@ def search_results(page):
         search_type = 'all'
     if search_type == 'authors':
         authors = Author.query.limit(10)
-        return render_template('authors_list.html', authors=authors, search_term=search_term, search_type=search_type)
+        return render_template(
+            'authors_list.html',
+            authors=authors,
+            search_term=search_term,
+            search_type=search_type,
+            curr_author_id=curr_author_id
+        )
     if search_type == 'books':
         books = Book.search_by_title(search_term)
-        return render_template('books_search_result.html', books=books, search_term=search_term, search_type=search_type)
+        books_pager = books.paginate(page, ITEMS_PER_PAGE)
+        return render_template('books_search_result.html', books_pager=books_pager, search_term=search_term, search_type=search_type)
     return search_term
 
 
