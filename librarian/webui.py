@@ -22,12 +22,14 @@ def book_info(book_id):
     return render_template("book_info.html", book=book)
 
 
-@app.route("/s/<int:sequence_id>")
-def sequence_books(sequence_id):
+@app.route("/s/<int:sequence_id>", defaults={'page': 1})
+@app.route("/s/<int:sequence_id>/p<int:page>")
+def sequence_books(sequence_id, page):
     books = Book.query.filter_by(sequence_id=sequence_id)
     if not books:
         abort(404)
-    return render_template("sequence_books.html", books=books)
+    books_pager = books.paginate(page, ITEMS_PER_PAGE)
+    return render_template("sequence_books.html", books_pager=books_pager)
 
 
 @app.route("/a/<int:author_id>")

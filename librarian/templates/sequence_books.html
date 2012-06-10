@@ -1,14 +1,18 @@
 {% extends "layout.html" %}
 {% import "helpers.html" as h %} 
+{% set author = books_pager.items[0].authors[0] %}
+{% set sequence = books_pager.items[0].sequence %}
 {% set path = [
     (url_for('main_page'), 'Home'),
-    (url_for('author_books', author_id=books[0].authors[0].id), books[0].authors[0].first_name + " " + books[0].authors[0].last_name),
-    (url_for('sequence_books', sequence_id=books[0].sequence.id), books[0].sequence.title)
+    (url_for('author_books', author_id=author.id), author.full_name),
+    (url_for('sequence_books', sequence_id=sequence.id), sequence.title)
 ]
 %}
 {% block body %}
     <div class=page-header>
-        <h1>Books of {{ books[0].sequence.title }}</h1>
+        <h1>Books of {{ sequence.title }}</h1>
     </div>
-    {{ h.books_list(books) }}
+    {{ h.books_list(books_pager.items) }}
+
+    {{h.render_pagination(books_pager, 'sequence_books', sequence_id=sequence.id) }}
 {% endblock %}

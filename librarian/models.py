@@ -36,6 +36,10 @@ class Author(db.Model):
     def __repr__(self):
         return "<Author %r>" % self.id
 
+    @property
+    def full_name(self):
+        return "%s %s" % (self.first_name, self.last_name)
+
     @classmethod
     def search_starting_from(cls, prefix):
         prefix = prefix.lower()
