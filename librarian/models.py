@@ -67,12 +67,17 @@ class Book(db.Model):
     genres = db.relationship('Genre', secondary=book_genre,
         backref=db.backref('books', lazy='dynamic'))
 
-    def __init__(self, username, email):
-        self.username = username
-        self.email = email
+    def __init__(self, id, title, annotation, sequence_id, sequence_number, authors, genres):
+        self.id = id
+        self.title = title
+        self.annotation = annotation
+        self.sequence_id = sequence_id
+        self.sequence_number = sequence_number
+        self.authors = authors
+        self.genres = genres
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<Book %r>' % self.id
     
     @classmethod
     def search_by_title(cls, title):
