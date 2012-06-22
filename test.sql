@@ -16,10 +16,10 @@ insert into author_book values (1,1);
 insert into author_book values (1,2);
 insert into author_book values (2,3);
 insert into author_book values (3,4);
-insert into genre values (1, 'drama');
-insert into genre values (2, 'crime');
-insert into genre values (3, 'story');
-insert into genre values (4, 'adventure');
+insert into genre(title) values ('drama');
+insert into genre(title) values ('crime');
+insert into genre(title) values ('story');
+insert into genre(title) values ('adventure');
 
 insert into book_genre values (1, 1);
 insert into book_genre values (1, 2);
