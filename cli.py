@@ -1,9 +1,10 @@
+from librarian.models import Author, Book, Sequence, Genre
 from consoleargs import command
-from librarian.models import Author, Book, Sequence
-from librarian.db import Database
+from librarian import db
+
 
 @command
-def main(inp_filename, db_filename):
+def main(inp_filename):
     for line in open(inp_filename):
         parts = line.split('~')
         unparsed_authors = parts[0].split(':')[:-1]
@@ -12,19 +13,42 @@ def main(inp_filename, db_filename):
             unparsed_author = unparsed_author.split(',')
             last_name = unparsed_author[0]
             first_name = unparsed_author[1]
-            authors += [Author(
-                author_id=None,
+            db_author = Author.query.filter_by(
                 first_name=first_name,
                 last_name=last_name
-                )]
+            ).first()
+            if db_author:
+                authors.append(db_author)
+            else:
+                authors.append(Author(
+                    first_name=first_name,
+                    last_name=last_name
+                ))
         
-        genres = parts[1].split(':')[:-1]
+        gen_titles = parts[1].split(':')[:-1]
+        genres = []
+        for gen_title in gen_titles:
+            db_genre = Genre.query.filter_by(title=gen_title).first()
+            if db_genre:
+                genres.append(db_genre)
+            else:
+                genres.append(Genre(title=gen_title))
+
         title = parts[2]
-        sequence = Sequence(sequence_id=None, title=parts[3]) if parts[3] else None
+
+        seq_title = parts[3] if parts[3] else None
+        sequence = None
+        if seq_title:
+            db_sequence = Sequence.query.filter_by(title=seq_title).first()
+            if db_sequence:
+                sequence = db_sequence
+            else:
+                sequence = Sequence(title=seq_title)
+
         sequence_number = int(parts[4]) if parts[4] else None
-        book_id = int(parts[5])
+        id = int(parts[5])
         book = Book(
-                book_id=book_id,
+                id=id,
                 title=title,
                 authors=authors,
                 genres=genres,
@@ -33,8 +57,8 @@ def main(inp_filename, db_filename):
                 annotation=None
         )
 
-        with Database() as db:
-            db.add_book(book)
+        db.session.add(book)
+        db.session.commit()
 
 
 if __name__ == "__main__":
