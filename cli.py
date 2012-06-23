@@ -58,7 +58,8 @@ def main(inp_filename):
         )
 
         db.session.add(book)
-        db.session.commit()
+        db.session.flush()
+    db.session.commit()
 
 
 if __name__ == "__main__":
