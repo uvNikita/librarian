@@ -12,7 +12,7 @@ def main(inp_filename):
         for unparsed_author in unparsed_authors:
             unparsed_author = unparsed_author.split(',')
             last_name = unparsed_author[0]
-            first_name = unparsed_author[1]
+            first_name = unparsed_author[1] or None
             db_author = Author.query.filter_by(
                 first_name=first_name,
                 last_name=last_name
@@ -36,7 +36,7 @@ def main(inp_filename):
 
         title = parts[2]
 
-        seq_title = parts[3] if parts[3] else None
+        seq_title = parts[3] or None
         sequence = None
         if seq_title:
             db_sequence = Sequence.query.filter_by(title=seq_title).first()

@@ -28,7 +28,7 @@ class Genre(db.Model):
 
 class Author(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(), nullable=False)
+    first_name = db.Column(db.String())
     last_name = db.Column(db.String(), nullable=False)
 
     def __init__(self, first_name, last_name):
@@ -40,6 +40,8 @@ class Author(db.Model):
 
     @property
     def full_name(self):
+        if not self.first_name:
+            return self.last_name
         return "%s %s" % (self.first_name, self.last_name)
 
     @classmethod
