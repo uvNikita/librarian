@@ -60,8 +60,6 @@ def search_results(page):
         )
     if search_type == 'books':
         books = Book.search_by_title(search_term)
-        if curr_author_id:
-            books = books.filter
         books_pager = books.paginate(page, ITEMS_PER_PAGE)
         return render_template(
             'books_search_result.html',
