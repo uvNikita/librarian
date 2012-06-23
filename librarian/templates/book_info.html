@@ -2,7 +2,7 @@
 {% import "helpers.html" as h %}
 {% set path = [
     (url_for('main_page'), 'Home'),
-    (url_for('author_books', author_id=book.authors[0].id), book.authors[0].first_name + " " + book.authors[0].last_name),
+    (url_for('author_books', author_id=book.authors[0].id), book.authors[0].full_name),
     (url_for('book_info', book_id=book.id), book.title)
 ] %}
 {% block body %}
@@ -11,7 +11,7 @@
             <h2>{{ book.title }}</h2>
         </div>
         <div class="span4">
-            <h1>{{ book.authors[0].first_name }} {{ book.authors[0].last_name }}</h1>
+            <h1>{{ book.authors[0].full_name }} </h1>
         </div>
         {% if book.sequence %}
             <div class="span4">
