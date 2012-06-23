@@ -69,14 +69,21 @@ def search_results(page):
     return search_term
 
 
-@app.route("/authors/")
-def authors():
+@app.route("/authors", defaults={'page': 1})
+@app.route("/authors/p<int:page>")
+def authors(page):
     first_letter = request.args.get('first_letter')
     second_letter = request.args.get('second_letter')
-    authors = None
+    authors_pager = None
     if first_letter and second_letter:
         authors = Author.search_starting_from(first_letter + second_letter)
-    return render_template('authors_chooser.html', first_letter=first_letter, second_letter=second_letter, authors=authors)
+        authors_pager = authors.paginate(page, ITEMS_PER_PAGE)
+    return render_template(
+        'authors_chooser.html',
+        first_letter=first_letter,
+        second_letter=second_letter,
+        authors_pager=authors_pager
+    )
 
 
 @app.route("/get_fb2/<int:book_id>")

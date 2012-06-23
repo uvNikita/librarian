@@ -33,7 +33,8 @@
         {% endif %}
     {% endif %}
 
-    {% if authors %}
-        {{ h.authors_list(authors) }}
+    {% if authors_pager %}
+        {{ h.authors_list(authors_pager.items) }}
+        {{ h.render_pagination(authors_pager, 'authors', first_letter=first_letter, second_letter=second_letter) }}
     {% endif %}
 {% endblock %}
