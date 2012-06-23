@@ -1,13 +1,15 @@
 from librarian import db
 
 
-book_genre = db.Table('book_genre',
+book_genre = db.Table(
+    'book_genre',
     db.Column('book_id', db.Integer, db.ForeignKey('book.id')),
     db.Column('genre_id', db.Integer, db.ForeignKey('genre.id'))
 )
 
 
-author_book = db.Table('author_book',
+author_book = db.Table(
+    'author_book',
     db.Column('author_id', db.Integer, db.ForeignKey('author.id')),
     db.Column('book_id', db.Integer, db.ForeignKey('book.id'))
 )
@@ -15,7 +17,7 @@ author_book = db.Table('author_book',
 
 class Genre(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(), nullable=False)
+    title = db.Column(db.String(), nullable=False, unique=True)
 
     def __init__(self, title):
         self.title = title
@@ -47,10 +49,9 @@ class Author(db.Model):
         return cls.query.filter(cls.last_name.ilike(prefix))
 
 
-
 class Sequence(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(), nullable=False)
+    title = db.Column(db.String(), nullable=False, unique=True)
     books = db.relationship('Book', backref='sequence', lazy='dynamic')
 
     def __init__(self, title):
@@ -71,11 +72,11 @@ class Book(db.Model):
     genres = db.relationship('Genre', secondary=book_genre,
         backref=db.backref('books', lazy='dynamic'))
 
-    def __init__(self, id, title, annotation, sequence_id, sequence_number, authors, genres):
+    def __init__(self, id, title, annotation, sequence, sequence_number, authors, genres):
         self.id = id
         self.title = title
         self.annotation = annotation
-        self.sequence_id = sequence_id
+        self.sequence = sequence
         self.sequence_number = sequence_number
         self.authors = authors
         self.genres = genres
