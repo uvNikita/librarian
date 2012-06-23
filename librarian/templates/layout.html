@@ -38,7 +38,6 @@
                 <input value="{{ search_term if search_term is defined else '' }}" name="term" type="text" class="input-large search-query" />
                 in
                 <select name='type'>
-                    <option value='all' {{ 'selected' if search_type == 'all' else '' }} >Everywhere</option>
                     <option value='authors' {{ 'selected' if search_type == 'authors' else '' }} >Authors</option>
                     <option value='books' {{ 'selected' if search_type == 'books' else '' }} >Book</option>
                 </select>
