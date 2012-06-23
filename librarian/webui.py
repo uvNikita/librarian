@@ -7,7 +7,7 @@ from librarian import app
 from librarian.models import Book, Author
 
 
-ITEMS_PER_PAGE = 1
+ITEMS_PER_PAGE = 100
 
 @app.route("/")
 def main_page():

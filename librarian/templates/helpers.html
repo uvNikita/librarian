@@ -57,7 +57,7 @@
 {% macro render_pagination(pagination, endpoint) %}
     <div class=pagination>
         <ul>
-            {%- for page in pagination.iter_pages(left_edge=1, left_current=1, right_current=1, right_edge=1) %}
+            {%- for page in pagination.iter_pages(left_edge=2, left_current=2, right_current=3, right_edge=2) %}
                 {% if page %}
                     {% if page != pagination.page %}
                         <li><a href="{{ url_for(endpoint, page=page, **kwargs) }}">{{ page }}</a></li>
