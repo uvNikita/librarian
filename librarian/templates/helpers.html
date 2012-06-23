@@ -43,7 +43,7 @@
     {% for author in authors %}
         <div class="row well">
             <div class="span6">
-                {{ author.first_name }} {{ author.last_name }}
+                {{ author.full_name }}
             </div>
             <div class="span4">
                 <a class="btn btn-info" href="{{ url_for('author_books', author_id=author.id) }}">Books</a>
