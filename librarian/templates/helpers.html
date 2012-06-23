@@ -17,11 +17,9 @@
             </div>
 
             <div class="span3">
-                {% if book.authors %}
-                    <a href="{{ url_for('author_books', author_id=book.authors[0].id) }}"> {{ book.authors[0].first_name + " " + book.authors[0].last_name }} </a>
-                {% else %}
-                    -
-                {% endif %}
+                {% for author in book.authors %}
+                    <a href="{{ url_for('author_books', author_id=author.id) }}"> {{author.full_name}} </a>
+                {% endfor %}
             </div>
 
             <div class="span2">
