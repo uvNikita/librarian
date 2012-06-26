@@ -50,8 +50,8 @@ def search_results(page):
     search_type = request.args.get('type', 'all')
     search_term = request.args.get('term', '')
     curr_author_id = request.args.get('curr_author_id')
-    if search_type not in ('all', 'authors', 'books'):
-        search_type = 'all'
+    if search_type not in ('authors', 'books'):
+        search_type = 'books'
     if search_type == 'authors':
         authors = Author.query.limit(10)
         return render_template(
@@ -70,7 +70,7 @@ def search_results(page):
             search_type=search_type,
             curr_author_id=curr_author_id
         )
-    return search_term
+    assert False, "Uknown search type"
 
 
 @app.route("/authors", defaults={'page': 1})
