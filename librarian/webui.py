@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from zipfile import ZipFile
 from os import listdir, path
 

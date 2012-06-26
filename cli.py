@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from librarian.models import Author, Book, Sequence, Genre
 from consoleargs import command
 from librarian import db

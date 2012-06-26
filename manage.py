@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from flaskext.script import Manager
 
 from librarian import app
