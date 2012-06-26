@@ -69,14 +69,15 @@ def search_results(page):
     if search_type not in ('authors', 'books'):
         search_type = 'books'
     if search_type == 'authors':
-        authors = Author.query.limit(10)
+        authors = authors_sorted(Author.search_by_last_name(search_term))
+        authors_pager = authors.paginate(page, ITEMS_PER_PAGE)
         return render_template(
             'authors_list.html',
-            authors=authors,
+            authors_pager=authors_pager,
             search_term=search_term,
             search_type=search_type
         )
-    if search_type == 'books':
+    elif search_type == 'books':
         books = books_sorted(Book.search_by_title(search_term))
         books_pager = books.paginate(page, ITEMS_PER_PAGE)
         return render_template(

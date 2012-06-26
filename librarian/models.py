@@ -40,6 +40,14 @@ class Author(db.Model):
     def __repr__(self):
         return "<Author %r>" % self.id
 
+    @classmethod
+    def search_by_last_name(cls, term):
+        term = term.lower()
+        term = term.replace(' ', '%')
+        term = '%' + term + '%'
+        return cls.query.filter(cls.last_name.ilike(term))
+
+
     @property
     def full_name(self):
         if not self.first_name:

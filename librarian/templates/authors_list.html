@@ -7,6 +7,7 @@
         <h1>Authors found by {{ search_term }} </h1>
     </div>
 
-    {{ h.authors_list(authors) }}
+    {{ h.authors_list(authors_pager.items) }}
+    {{ h.render_pagination(authors_pager, 'search_results', term=search_term, type=search_type) }}
 
 {% endblock %}
