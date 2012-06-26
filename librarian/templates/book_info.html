@@ -8,10 +8,12 @@
 {% block body %}
     <div class="row">
         <div class="span4">
-            <h2>{{ book.title }}</h2>
+            {% for author in book.authors %}
+                <h2>{{ author.full_name }} </h2>
+            {% endfor %}
         </div>
         <div class="span4">
-            <h1>{{ book.authors[0].full_name }} </h1>
+            <h1>{{ book.title }}</h1>
         </div>
         {% if book.sequence %}
             <div class="span4">
