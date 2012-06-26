@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from zipfile import ZipFile
-from os import listdir, path
+from os import listdir, path, rename
 
 from flask import request, render_template, abort, send_from_directory
 
@@ -105,10 +105,14 @@ def get_fb2(book_id):
     if not curr_zip:
         abort(404)
 
-    filename = '{name}.fb2'.format(name=book_id)
+    filename = '%s.fb2' % book_id
     with ZipFile(path.join(lib_path, curr_zip), 'r') as zip_file:
         zip_file.extract(filename, tmp_folder)
-    return send_from_directory(tmp_folder, filename, as_attachment=True)
+    title = Book.query.filter_by(id=book_id).first().title
+    new_filename = (u'%s.fb2' % title).encode('utf-8')
+    new_filename = new_filename
+    rename(path.join(tmp_folder, filename), path.join(tmp_folder, new_filename))
+    return send_from_directory(tmp_folder, new_filename, as_attachment=True)
 
 
 @app.route("/get_prc/<int:book_id>")
