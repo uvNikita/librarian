@@ -11,6 +11,22 @@ from librarian.models import Book, Author
 
 ITEMS_PER_PAGE = 100
 
+
+def books_sorted(query):
+    return (
+        query
+        .order_by(Book.sequence_id)
+        .order_by(Book.sequence_number)
+    )
+
+
+def authors_sorted(query):
+    return (
+        query
+        .order_by(Author.last_name)
+    )
+
+
 @app.route("/")
 def main_page():
     return render_template("main_page.html")
@@ -27,7 +43,7 @@ def book_info(book_id):
 @app.route("/s/<int:sequence_id>", defaults={'page': 1})
 @app.route("/s/<int:sequence_id>/p<int:page>")
 def sequence_books(sequence_id, page):
-    books = Book.query.filter_by(sequence_id=sequence_id)
+    books = books_sorted(Book.query.filter_by(sequence_id=sequence_id))
     if not books:
         abort(404)
     books_pager = books.paginate(page, ITEMS_PER_PAGE)
@@ -40,14 +56,14 @@ def author_books(author_id, page):
     author = Author.query.filter_by(id=author_id).first()
     if not author:
         abort(404)
-    books_pager = author.books.paginate(page, ITEMS_PER_PAGE)
+    books_pager = books_sorted(author.books).paginate(page, ITEMS_PER_PAGE)
     return render_template("books_list.html", author=author, books_pager=books_pager)
 
 
 @app.route("/search", defaults={'page': 1})
 @app.route("/search/p<int:page>")
 def search_results(page):
-    search_type = request.args.get('type', 'all')
+    search_type = request.args.get('type', 'books')
     search_term = request.args.get('term', '')
     curr_author_id = request.args.get('curr_author_id')
     if search_type not in ('authors', 'books'):
@@ -61,7 +77,7 @@ def search_results(page):
             search_type=search_type
         )
     if search_type == 'books':
-        books = Book.search_by_title(search_term)
+        books = books_sorted(Book.search_by_title(search_term))
         books_pager = books.paginate(page, ITEMS_PER_PAGE)
         return render_template(
             'books_search_result.html',
@@ -80,7 +96,8 @@ def authors(page):
     second_letter = request.args.get('second_letter')
     authors_pager = None
     if first_letter and second_letter:
-        authors = Author.search_starting_from(first_letter + second_letter)
+        prefix = first_letter + second_letter
+        authors = authors_sorted(Author.search_starting_from(prefix))
         authors_pager = authors.paginate(page, ITEMS_PER_PAGE)
     return render_template(
         'authors_chooser.html',
