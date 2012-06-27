@@ -8,7 +8,7 @@ from librarian import db
 @command
 def main(inp_filename):
     for line in open(inp_filename):
-        parts = line.split('~')
+        parts = line.split('\x04')
         unparsed_authors = parts[0].split(':')[:-1]
         authors = []
         for unparsed_author in unparsed_authors:
