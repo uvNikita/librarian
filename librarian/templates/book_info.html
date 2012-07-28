@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 {% import "helpers.html" as h %}
 {% set path = [
-    (url_for('main_page'), 'Home'),
-    (url_for('author_books', author_id=book.authors[0].id), book.authors[0].full_name),
-    (url_for('book_info', book_id=book.id), book.title)
+    (url_for('librarian.main_page'), 'Home'),
+    (url_for('librarian.author_books', author_id=book.authors[0].id), book.authors[0].full_name),
+    (url_for('librarian.book_info', book_id=book.id), book.title)
 ] %}
 {% block body %}
     <div class="row">

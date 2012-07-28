@@ -3,13 +3,16 @@
 from zipfile import ZipFile
 from os import listdir, path, rename
 
-from flask import request, render_template, abort, send_from_directory
+from flask import Blueprint, current_app, request, render_template, abort, send_from_directory
 
-from librarian import app
 from librarian.models import Book, Author
 
 
 ITEMS_PER_PAGE = 100
+
+
+librarian = Blueprint('librarian', __name__, template_folder='templates',
+                      static_folder='static')
 
 
 def books_sorted(query):
@@ -27,12 +30,12 @@ def authors_sorted(query):
     )
 
 
-@app.route("/")
+@librarian.route("/")
 def main_page():
     return render_template("main_page.html")
 
 
-@app.route("/b/<int:book_id>")
+@librarian.route("/b/<int:book_id>")
 def book_info(book_id):
     book = Book.query.filter_by(id=book_id).first()
     if not book:
@@ -40,8 +43,8 @@ def book_info(book_id):
     return render_template("book_info.html", book=book)
 
 
-@app.route("/s/<int:sequence_id>", defaults={'page': 1})
-@app.route("/s/<int:sequence_id>/p<int:page>")
+@librarian.route("/s/<int:sequence_id>", defaults={'page': 1})
+@librarian.route("/s/<int:sequence_id>/p<int:page>")
 def sequence_books(sequence_id, page):
     books = books_sorted(Book.query.filter_by(sequence_id=sequence_id))
     if not books:
@@ -50,8 +53,8 @@ def sequence_books(sequence_id, page):
     return render_template("sequence_books.html", books_pager=books_pager)
 
 
-@app.route("/a/<int:author_id>", defaults={'page': 1})
-@app.route("/a/<int:author_id>/p<int:page>")
+@librarian.route("/a/<int:author_id>", defaults={'page': 1})
+@librarian.route("/a/<int:author_id>/p<int:page>")
 def author_books(author_id, page):
     author = Author.query.filter_by(id=author_id).first()
     if not author:
@@ -60,8 +63,8 @@ def author_books(author_id, page):
     return render_template("books_list.html", author=author, books_pager=books_pager)
 
 
-@app.route("/search", defaults={'page': 1})
-@app.route("/search/p<int:page>")
+@librarian.route("/search", defaults={'page': 1})
+@librarian.route("/search/p<int:page>")
 def search_results(page):
     search_type = request.args.get('type', 'books')
     search_term = request.args.get('term', '')
@@ -90,8 +93,8 @@ def search_results(page):
     assert False, "Uknown search type"
 
 
-@app.route("/authors", defaults={'page': 1})
-@app.route("/authors/p<int:page>")
+@librarian.route("/authors", defaults={'page': 1})
+@librarian.route("/authors/p<int:page>")
 def authors(page):
     first_letter = request.args.get('first_letter')
     second_letter = request.args.get('second_letter')
@@ -108,10 +111,10 @@ def authors(page):
     )
 
 
-@app.route("/get_fb2/<int:book_id>")
+@librarian.route("/get_fb2/<int:book_id>")
 def get_fb2(book_id):
-    lib_path = app.config['PATH_TO_LIBRARY']
-    tmp_folder = app.config['TEMPORARY_FOLDER']
+    lib_path = current_app.config['PATH_TO_LIBRARY']
+    tmp_folder = current_app.config['TEMPORARY_FOLDER']
     zips = [f for f in listdir(lib_path) if f.endswith('.zip')]
     ranges = [zip_file.split('-') for zip_file in zips]
     ranges = [[int(r[1]), int(r[2][:-4])] for r in ranges]
@@ -133,6 +136,6 @@ def get_fb2(book_id):
     return send_from_directory(tmp_folder, new_filename, as_attachment=True)
 
 
-@app.route("/get_prc/<int:book_id>")
+@librarian.route("/get_prc/<int:book_id>")
 def get_prc(book_id):
     return "prc"

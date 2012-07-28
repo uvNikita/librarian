@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from librarian import db
+from flask.ext.sqlalchemy import SQLAlchemy
+
+
+db = SQLAlchemy()
 
 
 book_genre = db.Table(
