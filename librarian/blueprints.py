@@ -96,7 +96,7 @@ def search_results(page):
 
 @librarian.route("/authors", defaults={'page': 1})
 @librarian.route("/authors/p<int:page>")
-def authors(page):
+def authors_chooser(page):
     first_letter = request.args.get('first_letter')
     second_letter = request.args.get('second_letter')
     authors_pager = None

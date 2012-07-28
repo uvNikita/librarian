@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% import "helpers.html" as h %} 
 
-{% set path = [(url_for('librarian.main_page'), 'Home')] %}
+{% set path = [(url_for('.main_page'), 'Home')] %}
 {% set eng_chars = 'abcdefghijklmnopqrstuvwxyz' %}
 {% set rus_chars = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя' %}
 
@@ -9,13 +9,13 @@
     {% if not first_letter %}
         <p>
         {% for char in eng_chars %}
-            <a class="btn btn-info" href="{{ url_for('librarian.authors', first_letter=char) }}">{{ char.upper() }}</a>
+            <a class="btn btn-info" href="{{ url_for('.authors_chooser', first_letter=char) }}">{{ char.upper() }}</a>
         {% endfor %}
         </p>
 
         <p>
         {% for char in rus_chars %}
-            <a class="btn btn-info" href="{{ url_for('librarian.authors', first_letter=char) }}">{{ char.upper() }}</a>
+            <a class="btn btn-info" href="{{ url_for('.authors_chooser', first_letter=char) }}">{{ char.upper() }}</a>
         {% endfor %}
         </p>
     {% endif %}
@@ -23,12 +23,12 @@
     {% if first_letter and not second_letter %}
         {% if first_letter in eng_chars %}
             {% for char in eng_chars %}
-                <a class="btn btn-info" href="{{ url_for('librarian.authors', first_letter=first_letter, second_letter=char) }}">{{ first_letter.upper() + char }}</a>
+                <a class="btn btn-info" href="{{ url_for('.authors_chooser', first_letter=first_letter, second_letter=char) }}">{{ first_letter.upper() + char }}</a>
             {% endfor %}
         {% endif %}
         {% if first_letter in rus_chars %}
             {% for char in rus_chars %}
-                <a class="btn btn-info" href="{{ url_for('librarian.authors', first_letter=first_letter, second_letter=char) }}">{{ first_letter.upper() + char }}</a>
+                <a class="btn btn-info" href="{{ url_for('.authors_chooser', first_letter=first_letter, second_letter=char) }}">{{ first_letter.upper() + char }}</a>
             {% endfor %}
         {% endif %}
     {% endif %}
