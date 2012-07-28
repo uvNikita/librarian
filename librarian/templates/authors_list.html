@@ -8,6 +8,6 @@
     </div>
 
     {{ h.authors_list(authors_pager.items) }}
-    {{ h.render_pagination(authors_pager, 'search_results', term=search_term, type=search_type) }}
+    {{ h.render_pagination(authors_pager) }}
 
 {% endblock %}

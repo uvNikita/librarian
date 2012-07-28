@@ -3,7 +3,7 @@
 from zipfile import ZipFile
 from os import listdir, path, rename
 
-from flask import request, render_template, abort, send_from_directory
+from flask import request, render_template, abort, send_from_directory, url_for
 
 from librarian import app
 from librarian.models import Book, Author
@@ -136,3 +136,12 @@ def get_fb2(book_id):
 @app.route("/get_prc/<int:book_id>")
 def get_prc(book_id):
     return "prc"
+
+
+def current_url(save_get_params=False, **updates):
+     args = request.view_args.copy()
+     args.update(updates)
+     if save_get_params:
+         args.update(request.args)
+     return url_for(request.endpoint, **args)
+app.jinja_env.globals['current_url'] = current_url

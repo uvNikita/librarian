@@ -13,6 +13,6 @@
         <h1>Books of {{ author.full_name }} </h1>
     </div>
 {{ h.books_list(books_pager.items) }}
-{{ h.render_pagination(books_pager, 'author_books', author_id=author.id) }}
+{{ h.render_pagination(books_pager) }}
 
 {% endblock %}

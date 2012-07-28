@@ -13,6 +13,6 @@
 
     {{ h.books_list(books_pager.items) }}
 
-    {{h.render_pagination(books_pager, 'search_results', term=search_term, type=search_type, curr_author_id=curr_author_id) }}
+    {{h.render_pagination(books_pager) }}
 
 {% endblock %}
