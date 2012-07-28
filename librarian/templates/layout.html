@@ -1,19 +1,19 @@
 <!doctype html>
 <html>
-    <link rel="shortcut icon" href="{{ url_for('librarian.static', filename='favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ url_for('.static', filename='favicon.ico') }}">
     <head>
         <title>Librarian</title>
-        <link rel=stylesheet type=text/css href="{{ url_for('librarian.static', filename='css/bootstrap.css') }}">
+        <link rel=stylesheet type=text/css href="{{ url_for('.static', filename='css/bootstrap.css') }}">
     </head>
     <body>
         <div class="navbar navbar-fixed-top">
             <div class=navbar-inner>
                 <div class=container>
-                    <a class="brand" href="#"> Librarian </a>
+                    <a class="brand" href="{{ url_for('.authors_chooser') }}"> Librarian </a>
                     <div class="nav-collapse collapse">
                         <ul class=nav>
-                            <li><a href="{{ url_for('librarian.main_page') }}"> Search </a>
-                            <li><a href="{{ url_for('librarian.authors') }}"> Authors </a>
+                            <li><a href="{{ url_for('.main_page') }}"> Search </a>
+                            <li><a href="{{ url_for('.authors_chooser') }}"> Authors </a>
                         </ul>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
 
             {% block title %}{% endblock %}
 
-            <form name="search_form" action="{{ url_for('librarian.search_results') }}" method="get" accept-charset="UTF-8" class="well form-search">
+            <form name="search_form" action="{{ url_for('.search') }}" method="get" accept-charset="UTF-8" class="well form-search">
                 Search me the
                 <input value="{{ search_term if search_term is defined else '' }}" name="term" type="text" class="input-large search-query" />
                 in
@@ -48,6 +48,6 @@
             {% block body %}{% endblock %}
         </div>
 
-        <script src="{{ url_for('librarian.static', filename='js/bootstrap.js') }}"></script>
+        <script src="{{ url_for('.static', filename='js/bootstrap.js') }}"></script>
     </body>
 </html>

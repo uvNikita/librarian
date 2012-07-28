@@ -66,7 +66,7 @@ def author_books(author_id, page):
 
 @librarian.route("/search", defaults={'page': 1})
 @librarian.route("/search/p<int:page>")
-def search_results(page):
+def search(page):
     search_type = request.args.get('type', 'books')
     search_term = request.args.get('term', '')
     curr_author_id = request.args.get('curr_author_id')
@@ -76,7 +76,7 @@ def search_results(page):
         authors = authors_sorted(Author.search_by_last_name(search_term))
         authors_pager = authors.paginate(page, ITEMS_PER_PAGE)
         return render_template(
-            'authors_list.html',
+            'authors_search_results.html',
             authors_pager=authors_pager,
             search_term=search_term,
             search_type=search_type
@@ -96,7 +96,7 @@ def search_results(page):
 
 @librarian.route("/authors", defaults={'page': 1})
 @librarian.route("/authors/p<int:page>")
-def authors(page):
+def authors_chooser(page):
     first_letter = request.args.get('first_letter')
     second_letter = request.args.get('second_letter')
     authors_pager = None
