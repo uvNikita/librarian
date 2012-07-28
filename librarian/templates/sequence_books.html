@@ -14,5 +14,5 @@
     </div>
     {{ h.books_list(books_pager.items) }}
 
-    {{h.render_pagination(books_pager, 'librarian.sequence_books', sequence_id=sequence.id) }}
+    {{h.render_pagination(books_pager) }}
 {% endblock %}

@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% import "helpers.html" as h %} 
 
-{% set path = [(librarian.url_for('main_page'), 'Home')] %}
+{% set path = [(url_for('librarian.main_page'), 'Home')] %}
 {% set eng_chars = 'abcdefghijklmnopqrstuvwxyz' %}
 {% set rus_chars = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя' %}
 
@@ -35,6 +35,6 @@
 
     {% if authors_pager %}
         {{ h.authors_list(authors_pager.items) }}
-        {{ h.render_pagination(authors_pager, 'librarian.authors', first_letter=first_letter, second_letter=second_letter) }}
+        {{ h.render_pagination(authors_pager) }}
     {% endif %}
 {% endblock %}

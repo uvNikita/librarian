@@ -2,11 +2,14 @@
 
 from flask import Flask
 
-from librarian.blueprints import librarian
+from librarian.util import current_url
 from librarian.models import db
+from librarian.blueprints import librarian
 
 app = Flask(__name__)
+
 app.config.from_object('config')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://librarian:librarian_pass@192.168.138.100/library'
+
 app.register_blueprint(librarian)
 db.init_app(app)
+app.jinja_env.globals['current_url'] = current_url
