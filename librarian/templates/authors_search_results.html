@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% import "helpers.html" as h %} 
 
-{% set path = [(url_for('librarian.main_page'), 'Home')] %}
+{% set path = [(url_for('.main_page'), 'Home')] %}
 {% block body %}
     <div class="page-header">
         <h1>Authors found by {{ search_term }} </h1>

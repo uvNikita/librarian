@@ -33,7 +33,7 @@
 
             {% block title %}{% endblock %}
 
-            <form name="search_form" action="{{ url_for('.search_results') }}" method="get" accept-charset="UTF-8" class="well form-search">
+            <form name="search_form" action="{{ url_for('.search') }}" method="get" accept-charset="UTF-8" class="well form-search">
                 Search me the
                 <input value="{{ search_term if search_term is defined else '' }}" name="term" type="text" class="input-large search-query" />
                 in
