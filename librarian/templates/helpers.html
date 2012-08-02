@@ -56,7 +56,7 @@
 {%- endmacro %}
 
 {% macro render_pagination(pagination) %}
-    <div class=pagination>
+    <div class="pagination pagination-centered">
         <ul>
             {%- for page in pagination.iter_pages(left_edge=2, left_current=2, right_current=3, right_edge=2) %}
                 {% if page %}
