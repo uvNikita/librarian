@@ -12,8 +12,8 @@ from librarian.models import Book, Author
 ITEMS_PER_PAGE = 100
 
 
-librarian = Blueprint('librarian', __name__, template_folder='templates',
-                      static_folder='static')
+main = Blueprint('main', __name__, template_folder='templates',
+                 static_folder='static')
 
 
 def books_sorted(query):
@@ -31,12 +31,12 @@ def authors_sorted(query):
     )
 
 
-@librarian.route("/")
+@main.route("/")
 def main_page():
     return render_template("main_page.html")
 
 
-@librarian.route("/b/<int:book_id>")
+@main.route("/b/<int:book_id>")
 def book_info(book_id):
     book = Book.query.filter_by(id=book_id).first()
     if not book:
@@ -44,8 +44,8 @@ def book_info(book_id):
     return render_template("book_info.html", book=book)
 
 
-@librarian.route("/s/<int:sequence_id>", defaults={'page': 1})
-@librarian.route("/s/<int:sequence_id>/p<int:page>")
+@main.route("/s/<int:sequence_id>", defaults={'page': 1})
+@main.route("/s/<int:sequence_id>/p<int:page>")
 def sequence_books(sequence_id, page):
     books = books_sorted(Book.query.filter_by(sequence_id=sequence_id))
     if not books:
@@ -54,8 +54,8 @@ def sequence_books(sequence_id, page):
     return render_template("sequence_books.html", books_pager=books_pager)
 
 
-@librarian.route("/a/<int:author_id>", defaults={'page': 1})
-@librarian.route("/a/<int:author_id>/p<int:page>")
+@main.route("/a/<int:author_id>", defaults={'page': 1})
+@main.route("/a/<int:author_id>/p<int:page>")
 def author_books(author_id, page):
     author = Author.query.filter_by(id=author_id).first()
     if not author:
@@ -64,8 +64,8 @@ def author_books(author_id, page):
     return render_template("books_list.html", author=author, books_pager=books_pager)
 
 
-@librarian.route("/search", defaults={'page': 1})
-@librarian.route("/search/p<int:page>")
+@main.route("/search", defaults={'page': 1})
+@main.route("/search/p<int:page>")
 def search(page):
     search_type = request.args.get('type', 'books')
     search_term = request.args.get('term', '')
@@ -94,8 +94,8 @@ def search(page):
     assert False, "Uknown search type"
 
 
-@librarian.route("/authors", defaults={'page': 1})
-@librarian.route("/authors/p<int:page>")
+@main.route("/authors", defaults={'page': 1})
+@main.route("/authors/p<int:page>")
 def authors_chooser(page):
     first_letter = request.args.get('first_letter')
     second_letter = request.args.get('second_letter')
@@ -112,7 +112,7 @@ def authors_chooser(page):
     )
 
 
-@librarian.route("/get_fb2/<int:book_id>")
+@main.route("/get_fb2/<int:book_id>")
 def get_fb2(book_id):
     lib_path = current_app.config['PATH_TO_LIBRARY']
     tmp_folder = current_app.config['TEMPORARY_FOLDER']
@@ -137,6 +137,6 @@ def get_fb2(book_id):
     return send_from_directory(tmp_folder, new_filename, as_attachment=True)
 
 
-@librarian.route("/get_prc/<int:book_id>")
+@main.route("/get_prc/<int:book_id>")
 def get_prc(book_id):
     return "prc"

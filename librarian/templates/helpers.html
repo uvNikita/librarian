@@ -1,7 +1,7 @@
 {% macro download_buttons(book_id, div_class="btn-toolbar") -%}
     <div class="{{ div_class }}">
-        <a class="btn btn-success" href="{{ url_for('librarian.get_fb2', book_id=book_id) }}">fb2</a>
-        <a class="btn btn-primary" href="{{ url_for('librarian.get_prc', book_id=book_id) }}">prc</a>
+        <a class="btn btn-success" href="{{ url_for('.get_fb2', book_id=book_id) }}">fb2</a>
+        <a class="btn btn-primary" href="{{ url_for('.get_prc', book_id=book_id) }}">prc</a>
     </div>
 {%- endmacro %}
 
@@ -18,7 +18,7 @@
 
             <div class="span3">
                 {% for author in book.authors %}
-                    <a href="{{ url_for('librarian.author_books', author_id=author.id) }}"> {{author.full_name}} </a>
+                    <a href="{{ url_for('.author_books', author_id=author.id) }}"> {{author.full_name}} </a>
                     {% if not loop.last %}
                         ,
                     {% endif %}
@@ -27,14 +27,14 @@
 
             <div class="span2">
                 {% if book.sequence %}
-                    <a href="{{ url_for('librarian.sequence_books', sequence_id=book.sequence_id) }}"> {{ book.sequence.title }} </a>
+                    <a href="{{ url_for('.sequence_books', sequence_id=book.sequence_id) }}"> {{ book.sequence.title }} </a>
                 {% else %}
                     -
                 {% endif %}
             </div>
 
             <div class="span1">
-                <a class="btn btn-info" href="{{ url_for('librarian.book_info', book_id=book.id) }}">Info</a>
+                <a class="btn btn-info" href="{{ url_for('.book_info', book_id=book.id) }}">Info</a>
             </div>
 
             {{ download_buttons(book.id, div_class="span2") }}
@@ -49,7 +49,7 @@
                 {{ author.full_name }}
             </div>
             <div class="span4">
-                <a class="btn btn-info" href="{{ url_for('librarian.author_books', author_id=author.id) }}">Books</a>
+                <a class="btn btn-info" href="{{ url_for('.author_books', author_id=author.id) }}">Books</a>
             </div>
         </div>
     {% endfor %}

@@ -2,8 +2,8 @@
 {% import "helpers.html" as h %} 
 
 {% set path = [
-    (url_for('librarian.main_page'), 'Home'),
-    (url_for('librarian.main_page'), search_term),
+    (url_for('.main_page'), 'Home'),
+    (url_for('.main_page'), search_term),
 ] %}
 
 {% block body %}
