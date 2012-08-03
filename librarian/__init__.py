@@ -6,7 +6,7 @@ from flask import Flask
 
 from .util import current_url
 from .models import db
-from .blueprints.main import main
+from .main.main import main
 
 app = Flask(__name__)
 
