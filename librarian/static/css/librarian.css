@@ -1,3 +1,14 @@
 body {
     padding-top: 45px;
 }
+
+.char-btn {
+    width: 20px;
+    padding: 10px;
+    margin-bottom: 2px;
+}
+
+.char-sep {
+    height: 15px;
+    clear: both;
+}
