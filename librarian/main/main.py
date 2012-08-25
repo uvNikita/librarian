@@ -97,17 +97,14 @@ def search(page):
 @main.route("/authors", defaults={'page': 1})
 @main.route("/authors/p<int:page>")
 def authors_chooser(page):
-    first_letter = request.args.get('first_letter')
-    second_letter = request.args.get('second_letter')
+    prefix = request.args.get('prefix', '')
     authors_pager = None
-    if first_letter and second_letter:
-        prefix = first_letter + second_letter
+    if prefix:
         authors = authors_sorted(Author.search_starting_from(prefix))
         authors_pager = authors.paginate(page, ITEMS_PER_PAGE)
     return render_template(
         'authors_chooser.html',
-        first_letter=first_letter,
-        second_letter=second_letter,
+        prefix=prefix,
         authors_pager=authors_pager
     )
 

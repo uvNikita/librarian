@@ -3,7 +3,8 @@ body {
 }
 
 .char-btn {
-    width: 20px;
+    min-width: 15px;
+    font-family: monospace;
     padding: 10px;
     margin-bottom: 2px;
 }
