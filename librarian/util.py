@@ -6,11 +6,11 @@ from librarian.models import Book, Author
 
 
 def current_url(save_get_params=False, **updates):
-     args = request.view_args.copy()
-     args.update(updates)
+     kwargs = request.view_args.copy()
      if save_get_params:
-         args.update(request.args)
-     return url_for(request.endpoint, **args)
+         kwargs.update(request.args)
+     kwargs.update(updates)
+     return url_for(request.endpoint, **kwargs)
 
 
 def books_sorted(query):
