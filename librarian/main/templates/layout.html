@@ -7,13 +7,13 @@
         <link rel=stylesheet type=text/css href="{{ url_for('.static', filename='css/librarian.css') }}">
     </head>
     <body>
-        <div class="navbar navbar-fixed-top">
+        <div class="navbar navbar-fixed-top navbar-inverse">
             <div class=navbar-inner>
                 <div class=container>
                     <a class="brand" href="{{ url_for('.authors_chooser') }}"> Librarian </a>
                     <div class="nav-collapse collapse">
                         <form name="search_form" action="{{ url_for('.search') }}" method="get" accept-charset="UTF-8" class="navbar-form pull-left">
-                            <input value="{{ search_term if search_term is defined else '' }}" name="term" type="text" class="search-query"/>
+                            <input value="{{ search_term if search_term is defined else '' }}" name="term" type="text" class="search-search"/>
                             <select name="type" onchange="submit()">
                                 <option value='authors' {{ 'selected' if search_type == 'authors' else '' }} >Authors</option>
                                 <option value='books' {{ 'selected' if search_type == 'books' else '' }} >Book</option>
