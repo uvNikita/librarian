@@ -68,7 +68,7 @@ def _create_container_xml(dest_dir):
 
 def fb2_2_epub(fb2_file, filename):
     fb2_tree = etree.parse(fb2_file)
-    path = tempfile.mkdtemp(prefix='librarian.', suffix=filename, dir='.')
+    path = tempfile.mkdtemp(prefix='librarian.', suffix=filename)
 
     mime_file = _create_mimetype(path)
     container_file = _create_container_xml(path)
@@ -76,7 +76,7 @@ def fb2_2_epub(fb2_file, filename):
     html_file = _create_html(fb2_tree, path)
     ncx_file = _create_ncx(fb2_tree, path)
 
-    zip_path = os.path.join(path, '%s.epub' % filename)
+    zip_path = os.path.join(path, u'%s.epub' % filename)
     zip_file = zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED)
     zip_file.write(mime_file, 'metadata', zipfile.ZIP_STORED)
     zip_file.write(container_file, 'META-INF/container.xml')
