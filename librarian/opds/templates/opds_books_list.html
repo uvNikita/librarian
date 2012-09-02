@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>Librarian</title>
+    {% for book in books %}
+        <entry>
+            <title> {{ book.title }} </title>
+            <link href="{{ url_for('main.get_epub', book_id=book.id) }}"
+                  type="application/epub+zip"
+                  rel="http://opds-spec.org/acquisition"/>
+        </entry>
+    {% endfor %}
+</feed>

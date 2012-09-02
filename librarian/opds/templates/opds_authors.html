@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>Librarian</title>
+    {% for author in authors %}
+        <entry>
+            <title> {{ author.full_name }} </title>
+            <link href="{{ url_for('.author_books', author_id=author.id) }}"
+                  type="application/atom+xml;profile=opds-catalog;kind=acquisition"/>
+        </entry>
+    {% endfor %}
+</feed>

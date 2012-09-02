@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>Librarian</title>
+    {% if not curr_prefix %}
+    <entry>
+        {% if lang == 'rus' %}
+            <title>Eng</title>
+            <link href="{{ url_for(request.endpoint, lang='eng') }}"
+                  type="application/atom+xml;profile=opds-catalog;kind=acquisition"/>
+            <content type="text">Switch to English alphabet</content>
+        {% else %}
+            <title>Rus</title>
+            <link href="{{ url_for(request.endpoint, lang='rus') }}"
+                  type="application/atom+xml;profile=opds-catalog;kind=acquisition"/>
+            <content type="text">Switch to Russian alphabet</content>
+        {% endif %}
+    </entry>
+    {% endif %}
+    {% for prefix, count in prefixes %}
+        <entry>
+            <title> {{ prefix.capitalize() }} </title>
+            <link href="{{ current_url(curr_prefix=prefix, save_get_params=True) }}"
+                  type="application/atom+xml;profile=opds-catalog;kind=acquisition"/>
+              <content type="text">We have {{ count }} such authors</content>
+        </entry>
+    {% endfor %}
+</feed>

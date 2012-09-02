@@ -125,3 +125,8 @@ def get_fb2(book_id):
 @main.route("/get_prc/<int:book_id>")
 def get_prc(book_id):
     return "prc"
+
+
+@main.route("/get_prc/<int:book_id>")
+def get_epub(book_id):
+    return "epub"
