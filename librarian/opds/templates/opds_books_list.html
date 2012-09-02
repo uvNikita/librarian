@@ -3,7 +3,11 @@
     <title>Librarian</title>
     {% for book in books %}
         <entry>
-            <title> {{ book.title }} </title>
+            {% if book.sequence %}
+                <title>{{ book.sequence.title }} - {{ book.sequence_number }} - {{ book.title }} </title>
+            {% else %}
+                <title> {{ book.title }} </title>
+            {% endif %}
             <link href="{{ url_for('main.get_epub', book_id=book.id) }}"
                   type="application/epub+zip"
                   rel="http://opds-spec.org/acquisition"/>
