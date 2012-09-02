@@ -84,3 +84,5 @@ def fb2_2_epub(fb2_file, filename):
     zip_file.write(html_file, 'OEBPS/index.html')
     zip_file.write(ncx_file, 'OEBPS/book.ncx')
     zip_file.close()
+
+    return zip_path
