@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from os import listdir, path, rename
+from os import listdir, path
 from zipfile import ZipFile
 
+from flask import redirect, url_for, send_file
 from flask import Blueprint, current_app, request, render_template, abort
-from flask import redirect, url_for
-from flask import send_from_directory
 
 from librarian.util import books_sorted, authors_sorted
 from librarian.models import Book, Author
@@ -97,8 +96,7 @@ def authors_chooser(page):
     )
 
 
-@main.route("/get_fb2/<int:book_id>")
-def get_fb2(book_id):
+def _get_fb2_file_by_id(book_id):
     lib_path = current_app.config['PATH_TO_LIBRARY']
     tmp_folder = current_app.config['TEMPORARY_FOLDER']
     zips = [f for f in listdir(lib_path) if f.endswith('.zip')]
@@ -109,17 +107,23 @@ def get_fb2(book_id):
         if range[0] <= book_id <= range[1]:
             curr_zip = zip_file
             break
-    if not curr_zip:
-        abort(404)
+    if curr_zip is None:
+        return None
 
     filename = '%s.fb2' % book_id
     with ZipFile(path.join(lib_path, curr_zip), 'r') as zip_file:
         zip_file.extract(filename, tmp_folder)
+    return path.join(tmp_folder, filename)
+
+
+@main.route("/get_fb2/<int:book_id>")
+def get_fb2(book_id):
+    file_path = _get_fb2_file_by_id(book_id)
+    if not file_path:
+        abort(404)
     title = Book.query.filter_by(id=book_id).first().title
     new_filename = (u'%s.fb2' % title).encode('utf-8')
-    new_filename = new_filename
-    rename(path.join(tmp_folder, filename), path.join(tmp_folder, new_filename))
-    return send_from_directory(tmp_folder, new_filename, as_attachment=True)
+    return send_file(file_path, as_attachment=True, attachment_filename=new_filename)
 
 
 @main.route("/get_prc/<int:book_id>")
@@ -127,6 +131,13 @@ def get_prc(book_id):
     return "prc"
 
 
-@main.route("/get_prc/<int:book_id>")
+@main.route("/get_epub/<int:book_id>")
 def get_epub(book_id):
-    return "epub"
+    from conversion import fb2_2_epub
+    file_path = _get_fb2_file_by_id(book_id)
+    epub_path = fb2_2_epub(file_path, str(book_id))
+
+    title = Book.query.filter_by(id=book_id).first().title
+    new_filename = (u'%s.epub' % title).encode('utf-8')
+    return send_file(epub_path, as_attachment=True,
+                     attachment_filename=new_filename)

@@ -3,4 +3,5 @@ Flask-SQLAlchemy==0.16
 Flask-Script==0.3.3
 SQLAlchemy==0.7.7
 consoleargs==0.3
+lxml==3.0alpha2
 psycopg2==2.4.5
