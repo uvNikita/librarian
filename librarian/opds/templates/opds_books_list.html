@@ -8,8 +8,8 @@
             {% else %}
                 <title> {{ book.title }} </title>
             {% endif %}
-            <link href="{{ url_for('main.get_epub', book_id=book.id) }}"
-                  type="application/epub+zip"
+            <link href="{{ url_for('main.get_fb2', book_id=book.id) }}"
+                  type="application/fb2+zip"
                   rel="http://opds-spec.org/acquisition"/>
         </entry>
     {% endfor %}
