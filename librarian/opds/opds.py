@@ -20,6 +20,7 @@ rus_chars = u'абвгдеёжзийклмнопрстуфхцчшщъыьэюя
 @opds.route('/')
 def authors_chooser():
     curr_prefix = request.args.get('curr_prefix', '')
+    show_authors = request.args.get('show_authors', False)
     lang = request.args.get('lang', 'rus')
     if lang == 'rus':
         chars = rus_chars
@@ -27,6 +28,10 @@ def authors_chooser():
         chars = eng_chars
     else:
         assert False, "No such language"
+
+    if show_authors:
+        authors = Author.query.filter(Author.last_name.ilike(curr_prefix))
+        return render_template('opds_authors.html', authors=authors)
 
     authors = Author.search_starting_from(curr_prefix)
     if authors.count() < AUTHORS_PER_PAGE:
