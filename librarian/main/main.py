@@ -5,6 +5,8 @@ from zipfile import ZipFile
 
 from flask import redirect, url_for, send_file
 from flask import Blueprint, current_app, request, render_template, abort
+from unidecode import unidecode
+from conversion import fb2_2_epub
 
 from librarian.util import books_sorted, authors_sorted
 from librarian.models import Book, Author
@@ -26,7 +28,7 @@ def main_page():
 def book_info(book_id):
     book = Book.query.filter_by(id=book_id).first()
     if not book:
-         abort(404)
+        abort(404)
     return render_template("book_info.html", book=book)
 
 
@@ -122,8 +124,9 @@ def get_fb2(book_id):
     if not file_path:
         abort(404)
     title = Book.query.filter_by(id=book_id).first().title
-    new_filename = (u'%s.fb2' % title).encode('utf-8')
-    return send_file(file_path, as_attachment=True, attachment_filename=new_filename)
+    new_filename = (u'%s.fb2' % title)
+    return send_file(file_path, as_attachment=True,
+                     attachment_filename=unidecode(new_filename))
 
 
 @main.route("/get_prc/<int:book_id>")
@@ -133,11 +136,10 @@ def get_prc(book_id):
 
 @main.route("/get_epub/<int:book_id>")
 def get_epub(book_id):
-    from conversion import fb2_2_epub
     file_path = _get_fb2_file_by_id(book_id)
     epub_path = fb2_2_epub(file_path, str(book_id))
 
     title = Book.query.filter_by(id=book_id).first().title
-    new_filename = (u'%s.epub' % title).encode('utf-8')
+    new_filename = (u'%s.epub' % title)
     return send_file(epub_path, as_attachment=True,
-                     attachment_filename=new_filename)
+                     attachment_filename=unidecode(new_filename))
