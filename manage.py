@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask.ext.script import Manager
+from flaskext.script import Manager
 
 from librarian import app
 from librarian.models import db
