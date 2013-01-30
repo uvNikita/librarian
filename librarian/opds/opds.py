@@ -47,7 +47,7 @@ def authors_chooser():
                            prefixes=prefixes, lang=lang)
 
 
-@opds.route('/a/<int:author_id>')
+@opds.route('/a-<int:author_id>')
 def author_books(author_id):
     author = Author.query.filter_by(id=author_id).first()
     if not author:

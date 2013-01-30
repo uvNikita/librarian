@@ -86,7 +86,8 @@ class Book(db.Model):
     genres = db.relationship('Genre', secondary=book_genre,
         backref=db.backref('books', lazy='dynamic'))
 
-    def __init__(self, id, title, annotation, sequence, sequence_number, authors, genres):
+    def __init__(self, id, title, annotation, sequence,
+                 sequence_number, authors, genres):
         self.id = id
         self.title = title
         self.annotation = annotation

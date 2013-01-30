@@ -19,42 +19,42 @@ main = Blueprint('main', __name__, template_folder='templates',
                  static_folder='static')
 
 
-@main.route("/")
+@main.route('/')
 def main_page():
     return redirect(url_for('.authors_chooser'))
 
 
-@main.route("/b/<int:book_id>")
+@main.route('/b-<int:book_id>')
 def book_info(book_id):
-    book = Book.query.filter_by(id=book_id).first()
+    book = Book.query.get(book_id)
     if not book:
         abort(404)
-    return render_template("book_info.html", book=book)
+    return render_template('book_info.html', book=book)
 
 
-@main.route("/s/<int:sequence_id>", defaults={'page': 1})
-@main.route("/s/<int:sequence_id>/p<int:page>")
+@main.route('/s-<int:sequence_id>', defaults={'page': 1})
+@main.route('/s-<int:sequence_id>/p<int:page>')
 def sequence_books(sequence_id, page):
     books = books_sorted(Book.query.filter_by(sequence_id=sequence_id))
     if not books:
         abort(404)
     books_pager = books.paginate(page, ITEMS_PER_PAGE)
-    return render_template("sequence_books.html", books_pager=books_pager)
+    return render_template('sequence_books.html', books_pager=books_pager)
 
 
-@main.route("/a/<int:author_id>", defaults={'page': 1})
-@main.route("/a/<int:author_id>/p<int:page>")
+@main.route('/a-<int:author_id>', defaults={'page': 1})
+@main.route('/a-<int:author_id>/p<int:page>')
 def author_books(author_id, page):
-    author = Author.query.filter_by(id=author_id).first()
+    author = Author.query.get(author_id)
     if not author:
         abort(404)
     books_pager = books_sorted(author.books).paginate(page, ITEMS_PER_PAGE)
-    return render_template("books_list.html", author=author,
+    return render_template('books_list.html', author=author,
                            books_pager=books_pager)
 
 
-@main.route("/search", defaults={'page': 1})
-@main.route("/search/p<int:page>")
+@main.route('/search', defaults={'page': 1})
+@main.route('/search/p<int:page>')
 def search(page):
     search_type = request.args.get('type', 'books')
     search_term = request.args.get('term', '')
@@ -83,8 +83,8 @@ def search(page):
     assert False, "Uknown search type"
 
 
-@main.route("/authors", defaults={'page': 1})
-@main.route("/authors/p<int:page>")
+@main.route('/authors', defaults={'page': 1})
+@main.route('/authors/p<int:page>')
 def authors_chooser(page):
     prefix = request.args.get('prefix', '')
     authors_pager = None
@@ -118,28 +118,33 @@ def _get_fb2_file_by_id(book_id):
     return path.join(tmp_folder, filename)
 
 
-@main.route("/get_fb2/<int:book_id>")
+@main.route('/get_fb2/b-<int:book_id>')
 def get_fb2(book_id):
     file_path = _get_fb2_file_by_id(book_id)
     if not file_path:
         abort(404)
-    title = Book.query.filter_by(id=book_id).first().title
-    new_filename = (u'%s.fb2' % title)
+    book = Book.query.get(book_id)
+    if not book:
+        abort(404)
+    filename = '%s.fb2' % unidecode(book.title)
     return send_file(file_path, as_attachment=True,
-                     attachment_filename=unidecode(new_filename))
+                     attachment_filename=filename)
 
 
-@main.route("/get_prc/<int:book_id>")
+@main.route('/get_prc/b-<int:book_id>')
 def get_prc(book_id):
     return "prc"
 
 
-@main.route("/get_epub/<int:book_id>")
+@main.route('/get_epub/b-<int:book_id>')
 def get_epub(book_id):
     file_path = _get_fb2_file_by_id(book_id)
+    if not file_path:
+        abort(404)
     epub_path = fb2_2_epub(file_path, str(book_id))
-
-    title = Book.query.filter_by(id=book_id).first().title
-    new_filename = (u'%s.epub' % title)
+    book = Book.query.get(book_id)
+    if not book:
+        abort(404)
+    filename = '%s.fb2' % unidecode(book.title)
     return send_file(epub_path, as_attachment=True,
-                     attachment_filename=unidecode(new_filename))
+                     attachment_filename=unidecode(filename))
