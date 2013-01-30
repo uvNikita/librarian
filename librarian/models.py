@@ -26,7 +26,7 @@ class Genre(db.Model):
 
     def __init__(self, title):
         self.title = title
-    
+
     def __repr__(self):
         return "<Genre %r>" % self.id
 
@@ -39,7 +39,7 @@ class Author(db.Model):
     def __init__(self, first_name, last_name):
         self.first_name = first_name
         self.last_name = last_name
-    
+
     def __repr__(self):
         return "<Author %r>" % self.id
 
@@ -49,7 +49,6 @@ class Author(db.Model):
         term = term.replace(' ', '%')
         term = '%' + term + '%'
         return cls.query.filter(cls.last_name.ilike(term))
-
 
     @property
     def full_name(self):
@@ -71,7 +70,7 @@ class Sequence(db.Model):
 
     def __init__(self, title):
         self.title = title
-    
+
     def __repr__(self):
         return "<Seuence %r>" % self.id
 
@@ -98,7 +97,7 @@ class Book(db.Model):
 
     def __repr__(self):
         return '<Book %r>' % self.id
-    
+
     @classmethod
     def search_by_title(cls, title):
         title = title.lower()

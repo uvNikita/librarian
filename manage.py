@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from flaskext.script import Manager
+from flask.ext.script import Manager
 
 from librarian import app
 from librarian.models import db
 
 manager = Manager(app)
+
 
 @manager.command
 def init_db():
