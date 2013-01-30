@@ -2,3 +2,5 @@ env/*
 tags
 *.swp
 *.pyc
+*.sublime-project
+*.sublime-workspace
