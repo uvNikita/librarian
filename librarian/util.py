@@ -2,15 +2,15 @@
 
 from flask import request, url_for
 
-from librarian.models import Book, Author
+from librarian.models import Author, Book, Sequence
 
 
 def current_url(save_get_params=False, **updates):
-     kwargs = request.view_args.copy()
-     if save_get_params:
-         kwargs.update(request.args)
-     kwargs.update(updates)
-     return url_for(request.endpoint, **kwargs)
+    kwargs = request.view_args.copy()
+    if save_get_params:
+        kwargs.update(request.args)
+    kwargs.update(updates)
+    return url_for(request.endpoint, **kwargs)
 
 
 def books_sorted(query):
@@ -25,4 +25,11 @@ def authors_sorted(query):
     return (
         query
         .order_by(Author.last_name)
+    )
+
+
+def seqs_sorted(query):
+    return (
+        query
+        .order_by(Sequence.title)
     )

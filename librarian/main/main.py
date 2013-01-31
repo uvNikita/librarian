@@ -8,8 +8,8 @@ from flask import Blueprint, current_app, request, render_template, abort
 from unidecode import unidecode
 from conversion import fb2_2_epub
 
-from librarian.util import books_sorted, authors_sorted
-from librarian.models import Book, Author
+from librarian.util import authors_sorted, books_sorted, seqs_sorted
+from librarian.models import author_book, Book, Author, Sequence
 
 
 ITEMS_PER_PAGE = 100
@@ -42,8 +42,8 @@ def sequence_books(sequence_id, page):
     return render_template('sequence_books.html', books_pager=books_pager)
 
 
-@main.route('/a-<int:author_id>', defaults={'page': 1})
-@main.route('/a-<int:author_id>/p<int:page>')
+@main.route('/a-<int:author_id>/all', defaults={'page': 1})
+@main.route('/a-<int:author_id>/all/p<int:page>')
 def author_books(author_id, page):
     author = Author.query.get(author_id)
     if not author:
@@ -51,6 +51,36 @@ def author_books(author_id, page):
     books_pager = books_sorted(author.books).paginate(page, ITEMS_PER_PAGE)
     return render_template('books_list.html', author=author,
                            books_pager=books_pager)
+
+
+@main.route('/a-<int:author_id>/other', defaults={'page': 1})
+@main.route('/a-<int:author_id>/other/p<int:page>')
+def author_books_other(author_id, page):
+    author = Author.query.get(author_id)
+    if not author:
+        abort(404)
+    books = author.books.filter_by(sequence_id=None)
+    books_pager = books_sorted(books).paginate(page, ITEMS_PER_PAGE)
+    return render_template('books_list.html', author=author,
+                           books_pager=books_pager)
+
+
+@main.route('/a-<int:author_id>', defaults={'page': 1})
+@main.route('/a-<int:author_id>/p<int:page>')
+def author_seqs(author_id, page):
+    author = Author.query.get(author_id)
+    if not author:
+        abort(404)
+    seqs = (
+        Sequence.query
+        .join(Book)
+        .join(author_book)
+        .filter_by(author_id=author_id))
+    seqs_pager = seqs_sorted(seqs).paginate(page, ITEMS_PER_PAGE)
+    if not seqs_pager.total:
+        return redirect(url_for('.author_books', author_id=author_id))
+    return render_template('seqs_list.html', author=author,
+                           seqs_pager=seqs_pager)
 
 
 @main.route('/search', defaults={'page': 1})

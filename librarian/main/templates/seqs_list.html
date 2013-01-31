@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% import "helpers.html" as h %} 
+
+{% set path = [
+    (url_for('.main_page'), 'Home'),
+    (url_for('.author_seqs', author_id=author.id), author.full_name)
+] %}
+
+{% set curr_author_id = author.id %}
+
+{% block body %}
+    <div class=page-header>
+        <h1>Sequenses by {{ author.full_name }} </h1>
+    </div>
+    {{ h.seqs_list(author.id, seqs_pager.items) }}
+    {{ h.render_pagination(seqs_pager) }}
+{% endblock %}
