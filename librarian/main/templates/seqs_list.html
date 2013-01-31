@@ -10,7 +10,7 @@
 
 {% block body %}
     <div class=page-header>
-        <h1>Sequenses by {{ author.full_name }} </h1>
+        <h2>Sequenses by {{ author.full_name }} </h2>
     </div>
     {{ h.seqs_list(author.id, seqs_pager.items) }}
     {{ h.render_pagination(seqs_pager) }}

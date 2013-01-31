@@ -10,7 +10,7 @@
 
 {% block body %}
     <div class=page-header>
-        <h1>Books of {{ author.full_name }} </h1>
+        <h2>Books of {{ author.full_name }} </h2>
     </div>
     {{ h.books_list(books_pager.items) }}
     {{ h.render_pagination(books_pager) }}

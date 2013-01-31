@@ -7,7 +7,7 @@
 
 
 {% macro seqs_list(author_id, seqs) -%}
-    <div class="row well">
+    <div class="row well well-small">
         <div class="span6">
             All books
         </div>
@@ -15,7 +15,7 @@
             <a class="btn btn-success" href="{{ url_for('.author_books', author_id=author_id) }}">Books</a>
         </div>
     </div>
-    <div class="row well">
+    <div class="row well well-small">
         <div class="span6">
             No sequence
         </div>
@@ -24,7 +24,7 @@
         </div>
     </div>
     {% for seq in seqs %}
-        <div class="row well">
+        <div class="row well well-small">
             <div class="span6">
                 {{ seq.title }}
             </div>
@@ -38,7 +38,7 @@
 
 {% macro books_list(books) -%}
     {% for book in books %}
-        <div class="row well">
+        <div class="row well well-small">
             <div class="span1">
                 <strong> {{ book.sequence_number or "-" }} </strong>
             </div>
@@ -76,7 +76,7 @@
 
 {% macro authors_list(authors) -%}
     {% for author in authors %}
-        <div class="row well">
+        <div class="row well well-small">
             <div class="span6">
                 {{ author.full_name }}
             </div>
