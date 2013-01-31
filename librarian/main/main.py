@@ -29,7 +29,7 @@ def book_info(book_id):
     book = Book.query.get(book_id)
     if not book:
         abort(404)
-    return render_template('book_info.html', book=book)
+    return render_template('book_info.jinja', book=book)
 
 
 @main.route('/s-<int:sequence_id>', defaults={'page': 1})
@@ -39,7 +39,7 @@ def sequence_books(sequence_id, page):
     if not books:
         abort(404)
     books_pager = books.paginate(page, ITEMS_PER_PAGE)
-    return render_template('sequence_books.html', books_pager=books_pager)
+    return render_template('sequence_books.jinja', books_pager=books_pager)
 
 
 @main.route('/a-<int:author_id>/all', defaults={'page': 1})
@@ -49,7 +49,7 @@ def author_books(author_id, page):
     if not author:
         abort(404)
     books_pager = books_sorted(author.books).paginate(page, ITEMS_PER_PAGE)
-    return render_template('books_list.html', author=author,
+    return render_template('books_list.jinja', author=author,
                            books_pager=books_pager)
 
 
@@ -61,7 +61,7 @@ def author_books_other(author_id, page):
         abort(404)
     books = author.books.filter_by(sequence_id=None)
     books_pager = books_sorted(books).paginate(page, ITEMS_PER_PAGE)
-    return render_template('books_list.html', author=author,
+    return render_template('books_list.jinja', author=author,
                            books_pager=books_pager)
 
 
@@ -79,7 +79,7 @@ def author_seqs(author_id, page):
     seqs_pager = seqs_sorted(seqs).paginate(page, ITEMS_PER_PAGE)
     if not seqs_pager.total:
         return redirect(url_for('.author_books', author_id=author_id))
-    return render_template('seqs_list.html', author=author,
+    return render_template('seqs_list.jinja', author=author,
                            seqs_pager=seqs_pager)
 
 
@@ -95,7 +95,7 @@ def search(page):
         authors = authors_sorted(Author.search_by_last_name(search_term))
         authors_pager = authors.paginate(page, ITEMS_PER_PAGE)
         return render_template(
-            'authors_search_results.html',
+            'authors_search_results.jinja',
             authors_pager=authors_pager,
             search_term=search_term,
             search_type=search_type
@@ -104,7 +104,7 @@ def search(page):
         books = books_sorted(Book.search_by_title(search_term))
         books_pager = books.paginate(page, ITEMS_PER_PAGE)
         return render_template(
-            'books_search_result.html',
+            'books_search_result.jinja',
             books_pager=books_pager,
             search_term=search_term,
             search_type=search_type,
@@ -122,7 +122,7 @@ def authors_chooser(page):
         authors = authors_sorted(Author.search_starting_from(prefix))
         authors_pager = authors.paginate(page, ITEMS_PER_PAGE)
     return render_template(
-        'authors_chooser.html',
+        'authors_chooser.jinja',
         prefix=prefix,
         authors_pager=authors_pager
     )
