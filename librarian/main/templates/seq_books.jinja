@@ -1,16 +1,16 @@
 {% extends "layout.jinja" %}
 {% import "helpers.jinja" as h %} 
 {% set author = books_pager.items[0].authors[0] %}
-{% set sequence = books_pager.items[0].sequence %}
+{% set seq = books_pager.items[0].sequence %}
 {% set path = [
     (url_for('.main_page'), 'Home'),
     (url_for('.author_books', author_id=author.id), author.full_name),
-    (url_for('.sequence_books', sequence_id=sequence.id), sequence.title)
+    (url_for('.seq_books', seq_id=seq.id), seq.title)
 ]
 %}
 {% block body %}
     <div class=page-header>
-        <h2>Books of {{ sequence.title }}</h2>
+        <h2>Books of {{ seq.title }}</h2>
     </div>
     {{ h.books_list(books_pager.items) }}
 

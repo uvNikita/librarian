@@ -32,14 +32,14 @@ def book_info(book_id):
     return render_template('book_info.jinja', book=book)
 
 
-@main.route('/s-<int:sequence_id>', defaults={'page': 1})
-@main.route('/s-<int:sequence_id>/p<int:page>')
-def sequence_books(sequence_id, page):
-    books = books_sorted(Book.query.filter_by(sequence_id=sequence_id))
+@main.route('/s-<int:seq_id>', defaults={'page': 1})
+@main.route('/s-<int:seq_id>/p<int:page>')
+def seq_books(seq_id, page):
+    books = books_sorted(Book.query.filter_by(sequence_id=seq_id))
     if not books:
         abort(404)
     books_pager = books.paginate(page, ITEMS_PER_PAGE)
-    return render_template('sequence_books.jinja', books_pager=books_pager)
+    return render_template('seq_books.jinja', books_pager=books_pager)
 
 
 @main.route('/a-<int:author_id>/all', defaults={'page': 1})
@@ -175,6 +175,6 @@ def get_epub(book_id):
     book = Book.query.get(book_id)
     if not book:
         abort(404)
-    filename = '%s.fb2' % unidecode(book.title)
+    filename = '%s.epub' % unidecode(book.title)
     return send_file(epub_path, as_attachment=True,
-                     attachment_filename=unidecode(filename))
+                     attachment_filename=filename)

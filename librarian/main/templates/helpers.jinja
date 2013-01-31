@@ -29,7 +29,7 @@
                 {{ seq.title }}
             </div>
             <div class="span4">
-                <a class="btn btn-info" href="{{ url_for('.sequence_books', sequence_id=seq.id) }}">Books</a>
+                <a class="btn btn-info" href="{{ url_for('.seq_books', seq_id=seq.id) }}">Books</a>
             </div>
         </div>
     {% endfor %}
@@ -58,7 +58,7 @@
 
             <div class="span2">
                 {% if book.sequence %}
-                    <a href="{{ url_for('.sequence_books', sequence_id=book.sequence_id) }}"> {{ book.sequence.title }} </a>
+                    <a href="{{ url_for('.seq_books', seq_id=book.sequence_id) }}"> {{ book.sequence.title }} </a>
                 {% else %}
                     -
                 {% endif %}
