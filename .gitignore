@@ -1,5 +1,6 @@
 env/*
 tags
+.ropeproject
 *.swp
 *.pyc
 *.sublime-project
