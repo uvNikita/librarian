@@ -1,5 +1,5 @@
-{% extends "layout.jinja" %}
-{% import "helpers.jinja" as h %} 
+{% extends "layout.html" %}
+{% import "helpers.html" as h %} 
 {% set author = books_pager.items[0].authors[0] %}
 {% set seq = books_pager.items[0].sequence %}
 {% set path = [
