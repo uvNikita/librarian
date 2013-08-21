@@ -130,35 +130,36 @@ def authors_chooser(page):
 
 def _get_fb2_file_by_id(book_id):
     lib_path = current_app.config['PATH_TO_LIBRARY']
-    tmp_folder = current_app.config['TEMPORARY_FOLDER']
     zips = [f for f in listdir(lib_path) if f.endswith('.zip')]
     ranges = [zip_file.split('-') for zip_file in zips]
     ranges = [[int(r[1]), int(r[2][:-4])] for r in ranges]
     curr_zip = None
-    for range, zip_file in zip(ranges, zips):
-        if range[0] <= book_id <= range[1]:
+    for range_, zip_file in zip(ranges, zips):
+        if range_[0] <= book_id <= range_[1]:
             curr_zip = zip_file
             break
     if curr_zip is None:
         return None
 
     filename = '%s.fb2' % book_id
+    fb2_file = None
     with ZipFile(path.join(lib_path, curr_zip), 'r') as zip_file:
-        zip_file.extract(filename, tmp_folder)
-    return path.join(tmp_folder, filename)
+        fb2_file = zip_file.open(filename)
+    return fb2_file
 
 
 @main.route('/get_fb2/b-<int:book_id>')
 def get_fb2(book_id):
-    file_path = _get_fb2_file_by_id(book_id)
-    if not file_path:
+    fb2_file = _get_fb2_file_by_id(book_id)
+    if not fb2_file:
         abort(404)
     book = Book.query.get(book_id)
     if not book:
         abort(404)
     filename = '%s.fb2' % unidecode(book.title)
-    return send_file(file_path, as_attachment=True,
-                     attachment_filename=filename)
+    return send_file(fb2_file, as_attachment=True,
+                     attachment_filename=filename,
+                     add_etags=False)
 
 
 @main.route('/get_prc/b-<int:book_id>')
@@ -168,13 +169,14 @@ def get_prc(book_id):
 
 @main.route('/get_epub/b-<int:book_id>')
 def get_epub(book_id):
-    file_path = _get_fb2_file_by_id(book_id)
-    if not file_path:
+    fb2_file = _get_fb2_file_by_id(book_id)
+    if not fb2_file:
         abort(404)
-    epub_path = fb2_2_epub(file_path, str(book_id))
+    epub_path = fb2_2_epub(fb2_file, str(book_id))
     book = Book.query.get(book_id)
     if not book:
         abort(404)
     filename = '%s.epub' % unidecode(book.title)
     return send_file(epub_path, as_attachment=True,
-                     attachment_filename=filename)
+                     attachment_filename=filename,
+                     add_etags=False)
