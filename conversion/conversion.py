@@ -4,6 +4,8 @@ import os
 import pkgutil
 import zipfile
 import tempfile
+import shutil
+from StringIO import StringIO
 
 from lxml import etree
 
@@ -68,21 +70,21 @@ def _create_container_xml(dest_dir):
 
 def fb2_2_epub(fb2_file, filename):
     fb2_tree = etree.parse(fb2_file)
-    path = tempfile.mkdtemp(prefix='librarian.', suffix=filename)
+    tmp_path = tempfile.mkdtemp(prefix='librarian.', suffix=filename)
 
-    mime_file = _create_mimetype(path)
-    container_file = _create_container_xml(path)
-    opf_file = _create_opf(fb2_tree, path)
-    html_file = _create_html(fb2_tree, path)
-    ncx_file = _create_ncx(fb2_tree, path)
+    mime_file = _create_mimetype(tmp_path)
+    container_file = _create_container_xml(tmp_path)
+    opf_file = _create_opf(fb2_tree, tmp_path)
+    html_file = _create_html(fb2_tree, tmp_path)
+    ncx_file = _create_ncx(fb2_tree, tmp_path)
 
-    zip_path = os.path.join(path, u'%s.epub' % filename)
-    zip_file = zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED)
-    zip_file.write(mime_file, 'metadata', zipfile.ZIP_STORED)
-    zip_file.write(container_file, 'META-INF/container.xml')
-    zip_file.write(opf_file, 'OEBPS/content.opf')
-    zip_file.write(html_file, 'OEBPS/index.html')
-    zip_file.write(ncx_file, 'OEBPS/book.ncx')
-    zip_file.close()
+    epub_file = StringIO()
+    with zipfile.ZipFile(epub_file, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+        zip_file.write(mime_file, 'metadata', zipfile.ZIP_STORED)
+        zip_file.write(container_file, 'META-INF/container.xml')
+        zip_file.write(opf_file, 'OEBPS/content.opf')
+        zip_file.write(html_file, 'OEBPS/index.html')
+        zip_file.write(ncx_file, 'OEBPS/book.ncx')
+    shutil.rmtree(tmp_path)
 
-    return zip_path
+    return epub_file

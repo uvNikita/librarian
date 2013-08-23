@@ -172,11 +172,11 @@ def get_epub(book_id):
     fb2_file = _get_fb2_file_by_id(book_id)
     if not fb2_file:
         abort(404)
-    epub_path = fb2_2_epub(fb2_file, str(book_id))
+    epub_file = fb2_2_epub(fb2_file, str(book_id))
     book = Book.query.get(book_id)
     if not book:
         abort(404)
     filename = '%s.epub' % unidecode(book.title)
-    return send_file(epub_path, as_attachment=True,
+    return send_file(epub_file, as_attachment=True,
                      attachment_filename=filename,
                      add_etags=False)
