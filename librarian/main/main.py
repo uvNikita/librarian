@@ -6,10 +6,11 @@ from zipfile import ZipFile
 from flask import redirect, url_for, send_file
 from flask import Blueprint, current_app, request, render_template, abort
 from unidecode import unidecode
+from sqlalchemy import distinct
 from conversion import fb2_2_epub
 
 from librarian.util import authors_sorted, books_sorted, seqs_sorted
-from librarian.models import author_book, Book, Author, Sequence
+from librarian.models import author_book, Book, Author, Sequence, db
 
 
 ITEMS_PER_PAGE = 50
@@ -71,11 +72,15 @@ def author_seqs(author_id, page):
     author = Author.query.get(author_id)
     if not author:
         abort(404)
-    seqs = (
-        Sequence.query
-        .join(Book)
+    seq_ids = (
+        db.session.query(distinct(Book.sequence_id))
         .join(author_book)
-        .filter_by(author_id=author_id))
+        .filter_by(author_id=author_id)
+        .all())
+    if seq_ids:
+        seqs = Sequence.query.filter(Sequence.id.in_(seq_ids))
+    else:
+        seqs = []
     seqs_pager = seqs_sorted(seqs).paginate(page, ITEMS_PER_PAGE)
     if not seqs_pager.total:
         return redirect(url_for('.author_books', author_id=author_id))

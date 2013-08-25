@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from flask import Blueprint, render_template, request, abort
+from sqlalchemy import distinct
 
 from librarian.util import books_sorted, authors_sorted, xml_response
-from librarian.models import Author, Sequence, Book, author_book
+from librarian.models import Author, Sequence, Book, author_book, db
 
 
 AUTHORS_PER_PAGE = 20
@@ -74,12 +75,15 @@ def author_seqs(author_id):
     author = Author.query.get(author_id)
     if not author:
         abort(404)
-    seqs = (
-        Sequence.query
-        .join(Book)
+    seq_ids = (
+        db.session.query(distinct(Book.sequence_id))
         .join(author_book)
         .filter_by(author_id=author_id)
         .all())
+    if seq_ids:
+        seqs = Sequence.query.filter(Sequence.id.in_(seq_ids)).all()
+    else:
+        seqs = []
     # CoolReader doesn't support redirects in opds: http://sourceforge.net/p/crengine/bugs/276/
     # if not seqs:
     #     return redirect(url_for('.author_books', author_id=author_id))
