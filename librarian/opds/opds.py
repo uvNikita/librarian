@@ -28,7 +28,7 @@ def authors_chooser():
     elif lang == 'eng':
         chars = eng_chars
     else:
-        abort(400)
+        abort(404)
 
     if show_authors:
         authors = Author.query.filter(Author.last_name.ilike(curr_prefix))
@@ -80,7 +80,7 @@ def author_seqs(author_id):
         .join(author_book)
         .filter_by(author_id=author_id)
         .all())
-    # CoolReader doesn't support redirects in opds.
+    # CoolReader doesn't support redirects in opds: http://sourceforge.net/p/crengine/bugs/276/
     # if not seqs:
     #     return redirect(url_for('.author_books', author_id=author_id))
     return render_template('opds_seqs_list.xml', author=author, seqs=seqs)
