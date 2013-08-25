@@ -2,11 +2,14 @@
 {% import "helpers.html" as h %} 
 
 {% set path = [(url_for('.main_page'), 'Home')] %}
-{% block body %}
-    <div class="page-header">
-        <h2>Authors found by {{ search_term }} </h2>
-    </div>
 
+{% block title %}
+    <div class="page-header">
+        <h3>Authors found by {{ search_term }} </h3>
+    </div>
+{% endblock %}
+
+{% block body %}
     {{ h.authors_list(authors_pager.items) }}
     {{ h.render_pagination(authors_pager) }}
 {% endblock %}

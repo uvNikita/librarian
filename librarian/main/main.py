@@ -12,7 +12,7 @@ from librarian.util import authors_sorted, books_sorted, seqs_sorted
 from librarian.models import author_book, Book, Author, Sequence
 
 
-ITEMS_PER_PAGE = 100
+ITEMS_PER_PAGE = 50
 
 
 main = Blueprint('main', __name__, template_folder='templates',

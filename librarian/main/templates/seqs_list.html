@@ -8,10 +8,13 @@
 
 {% set curr_author_id = author.id %}
 
-{% block body %}
+{% block title %}
     <div class=page-header>
-        <h2>Sequenses by {{ author.full_name }} </h2>
+        <h3>Sequences by {{ author.full_name }} </h3>
     </div>
+{% endblock %}
+
+{% block body %}
     {{ h.seqs_list(author.id, seqs_pager.items) }}
     {{ h.render_pagination(seqs_pager) }}
 {% endblock %}
