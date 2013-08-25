@@ -43,6 +43,11 @@ def seq_books(seq_id, page):
     return render_template('seq_books.html', books_pager=books_pager)
 
 
+@main.route('/a-<int:author_id>')
+def author(author_id):
+    return redirect(url_for('.author_seqs', author_id=author_id))
+
+
 @main.route('/a-<int:author_id>/all', defaults={'page': 1})
 @main.route('/a-<int:author_id>/all/p<int:page>')
 def author_books(author_id, page):
@@ -66,8 +71,8 @@ def author_books_other(author_id, page):
                            books_pager=books_pager)
 
 
-@main.route('/a-<int:author_id>', defaults={'page': 1})
-@main.route('/a-<int:author_id>/p<int:page>')
+@main.route('/a-<int:author_id>/seqs/', defaults={'page': 1})
+@main.route('/a-<int:author_id>/seqs/p<int:page>')
 def author_seqs(author_id, page):
     author = Author.query.get(author_id)
     if not author:

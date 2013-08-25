@@ -4,7 +4,7 @@
 {% set seq = books_pager.items[0].sequence %}
 {% set path = [
     (url_for('.main_page'), 'Home'),
-    (url_for('.author_books', author_id=author.id), author.full_name),
+    (url_for('.author', author_id=author.id), author.full_name),
     (url_for('.seq_books', seq_id=seq.id), seq.title)
 ]
 %}
