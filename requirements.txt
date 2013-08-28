@@ -6,3 +6,5 @@ consoleargs==0.3
 lxml==3.1beta1
 psycopg2==2.4.5
 Unidecode==0.04.9
+celery==3.0.22
+redis==2.8.0
