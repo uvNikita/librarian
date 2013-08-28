@@ -2,27 +2,25 @@
 {% import "helpers.html" as h %}
 {% set path = [
     (url_for('.main_page'), 'Home'),
-    (url_for('.author_books', author_id=book.authors[0].id), book.authors[0].full_name),
+    (url_for('.author', author_id=book.authors[0].id), book.authors[0].full_name),
     (url_for('.book_info', book_id=book.id), book.title)
 ] %}
 {% block body %}
-    <div class="row">
-        <center>
-        <div class="span4">
+    <div class="row text-center">
+        <div class="col-md-4 col-lg-4">
             {% for author in book.authors %}
                 <h4>{{ author.full_name }} </h4>
             {% endfor %}
         </div>
-        <div class="span4">
+        <div class="col-md-4 col-lg-4">
             <h3>{{ book.title }}</h3>
         </div>
         {% if book.sequence %}
-            <div class="span4">
+            <div class="col-md-4 col-lg-4">
                 <h4>{{ book.sequence.title }} # {{ book.sequence_number }}</h4>
             </div>
         {% endif %}
-        </div>
-        </center>
+    </div>
     {% if book.annotation %}
         <p> <blockquote> {{ book.annotation }} </blockquote> </p>
     {% endif %}
@@ -30,7 +28,7 @@
     <p>
     {% if book.genres %}
         {% for genre in book.genres %}
-           <span class="label label-inverse">{{ genre.title }}</span> 
+           <span class="label label-default">{{ genre.title }}</span>
         {% endfor %}
     {% endif %}
     </p>

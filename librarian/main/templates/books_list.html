@@ -3,14 +3,14 @@
 
 {% set path = [
     (url_for('.main_page'), 'Home'),
-    (url_for('.author_books', author_id=author.id), author.full_name)
+    (url_for('.author', author_id=author.id), author.full_name)
 ] %}
 
 {% set curr_author_id = author.id %}
 
 {% block body %}
     <div class=page-header>
-        <h2>Books of {{ author.full_name }} </h2>
+        <h3>Books of {{ author.full_name }} </h3>
     </div>
     {{ h.books_list(books_pager.items) }}
     {{ h.render_pagination(books_pager) }}

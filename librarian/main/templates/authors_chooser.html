@@ -8,31 +8,23 @@
 {% block body %}
     {% if not prefix %}
         {% for char in eng_chars %}
-        <div class="span1">
             <a class="btn btn-info char-btn" href="{{ url_for('.authors_chooser', prefix=char) }}">{{ char.upper() }}</a>
-        </div>
         {% endfor %}
 
         <div class="char-sep"></div>
 
         {% for char in rus_chars %}
-        <div class="span1">
             <a class="btn btn-info char-btn" href="{{ url_for('.authors_chooser', prefix=char) }}">{{ char.upper() }}</a>
-        </div>
         {% endfor %}
     {% else %}
         {% if prefix[0] in eng_chars %}
             {% for char in eng_chars %}
-            <div class="span1">
                 <a class="btn btn-info char-btn" href="{{ url_for('.authors_chooser', prefix=prefix + char) }}">{{ (prefix + char).capitalize() }}</a>
-            </div>
             {% endfor %}
         {% endif %}
         {% if prefix[0] in rus_chars %}
             {% for char in rus_chars %}
-            <div class="span1">
                 <a class="btn btn-info char-btn" href="{{ url_for('.authors_chooser', prefix=prefix + char) }}">{{ (prefix + char).capitalize() }}</a>
-            </div>
             {% endfor %}
         {% endif %}
     {% endif %}

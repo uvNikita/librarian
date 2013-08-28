@@ -4,7 +4,7 @@
     {% for author in authors %}
         <entry>
             <title> {{ author.full_name }} </title>
-            <link href="{{ url_for('.author_books', author_id=author.id) }}"
+            <link href="{{ url_for('.author_seqs', author_id=author.id) }}"
                   type="application/atom+xml;profile=opds-catalog;kind=acquisition"/>
         </entry>
     {% endfor %}

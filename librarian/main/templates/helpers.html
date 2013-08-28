@@ -8,91 +8,98 @@
 
 
 {% macro seqs_list(author_id, seqs) -%}
-    <div class="row well well-small">
-        <div class="span6">
-            All books
-        </div>
-        <div class="span4">
-            <a class="btn btn-success" href="{{ url_for('.author_books', author_id=author_id) }}">Books</a>
-        </div>
-    </div>
-    <div class="row well well-small">
-        <div class="span6">
-            No sequence
-        </div>
-        <div class="span4">
-            <a class="btn btn-warning" href="{{ url_for('.author_books_other', author_id=author_id) }}">Books</a>
-        </div>
-    </div>
-    {% for seq in seqs %}
-        <div class="row well well-small">
-            <div class="span6">
-                {{ seq.title }}
+    <div class="container">
+        <div class="row well well-sm">
+            <div class="col-xs-7 col-md-8 col-lg-8">
+                All books
             </div>
-            <div class="span4">
-                <a class="btn btn-info" href="{{ url_for('.seq_books', seq_id=seq.id) }}">Books</a>
+            <div class="col-xs-5 col-md-4 col-lg-4">
+                <a class="btn btn-success" href="{{ url_for('.author_books', author_id=author_id) }}">Books</a>
             </div>
         </div>
-    {% endfor %}
+        <div class="row well well-sm">
+            <div class="col-xs-7 col-md-8 col-lg-8">
+                No sequence
+            </div>
+            <div class="col-xs-5 col-md-4 col-lg-4">
+                <a class="btn btn-warning" href="{{ url_for('.author_books_other', author_id=author_id) }}">Books</a>
+            </div>
+        </div>
+        {% for seq in seqs %}
+            <div class="row well well-sm">
+                <div class="col-xs-7 col-md-8 col-lg-8">
+                    {{ seq.title }}
+                </div>
+                <div class="col-xs-5 col-md-4 col-lg-4">
+                    <a class="btn btn-info" href="{{ url_for('.seq_books', seq_id=seq.id) }}">Books</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {%- endmacro %}
 
 
 {% macro books_list(books) -%}
-    {% for book in books %}
-        <div class="row well well-small">
-            <div class="span1">
-                <strong> {{ book.sequence_number or "-" }} </strong>
-            </div>
+    <div class="container">
+        {% for book in books %}
+            <div class="row well well-sm">
+                <div class="col-lg-1 col-md-1 col-xs-1">
+                    <strong> {{ book.sequence_number or "-" }} </strong>
+                </div>
 
-            <div class="span2">
-                <strong> {{ book.title }} </strong>
-            </div>
+                <div class="col-lg-3 col-md-3 col-xs-3">
+                    <strong> {{ book.title }} </strong>
+                </div>
 
-            <div class="span3">
-                {% for author in book.authors %}
-                    <a href="{{ url_for('.author_books', author_id=author.id) }}"> {{author.full_name}} </a>
-                    {% if not loop.last %}
-                        ,
+                <div class="col-lg-3 col-md-2 col-xs-2">
+                    {% for author in book.authors %}
+                        <a href="{{ url_for('.author', author_id=author.id) }}"> {{author.full_name}} </a>
+                        {% if not loop.last %}
+                            ,
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="col-lg-2 col-md-2 col-xs-2">
+                    {% if book.sequence %}
+                        <a href="{{ url_for('.seq_books', seq_id=book.sequence_id) }}"> {{ book.sequence.title }} </a>
+                    {% else %}
+                        -
                     {% endif %}
-                {% endfor %}
-            </div>
+                </div>
 
-            <div class="span2">
-                {% if book.sequence %}
-                    <a href="{{ url_for('.seq_books', seq_id=book.sequence_id) }}"> {{ book.sequence.title }} </a>
-                {% else %}
-                    -
-                {% endif %}
-            </div>
+                <div class="col-lg-1 col-md-1 col-xs-1">
+                    <a class="btn btn-info" href="{{ url_for('.book_info', book_id=book.id) }}">Info</a>
+                </div>
+    {#            <div class="hidden-lg hidden-md" style="clear: both; margin-bottom: 5px"></div>#}
 
-            <div class="span1">
-                <a class="btn btn-info" href="{{ url_for('.book_info', book_id=book.id) }}">Info</a>
+                {{ download_buttons(book.id, div_class="col-lg-2 col-md-3 col-xs-3") }}
             </div>
-
-            {{ download_buttons(book.id, div_class="span2") }}
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 {%- endmacro %}
 
 
 {% macro authors_list(authors) -%}
-    {% for author in authors %}
-        <div class="row well well-small">
-            <div class="span6">
-                {{ author.full_name }}
+    <div class="container">
+        {% for author in authors %}
+            <div class="row well well-sm">
+                <div class="col-xs-8 col-md-9 col-lg-9">
+                    {{ author.full_name }}
+                </div>
+                <div class="col-xs-4 col-md-3 col-lg-3">
+                    <a class="btn btn-info" href="{{ url_for('.author_books', author_id=author.id) }}">Books</a>
+                    <a class="btn btn-success" href="{{ url_for('.author_seqs', author_id=author.id) }}">Sequences</a>
+                </div>
             </div>
-            <div class="span4">
-                <a class="btn btn-info" href="{{ url_for('.author_books', author_id=author.id) }}">Books</a>
-                <a class="btn btn-success" href="{{ url_for('.author_seqs', author_id=author.id) }}">Sequences</a>
-            </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 {%- endmacro %}
 
 
 {% macro render_pagination(pagination) %}
-    <div class="pagination pagination-centered">
-        <ul>
+    <div class="text-center">
+        <ul class="pagination">
             {%- for page in pagination.iter_pages(left_edge=2, left_current=2, right_current=3, right_edge=2) %}
                 {% if page %}
                     {% if page != pagination.page %}

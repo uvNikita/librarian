@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>Librarian</title>
+
+    <entry>
+        <title> All books </title>
+        <link href="{{ url_for('.author_books', author_id=author.id) }}"
+              type="application/atom+xml;profile=opds-catalog;kind=acquisition"/>
+    </entry>
+
+    <entry>
+        <title> No sequence </title>
+        <link href="{{ url_for('.author_books_other', author_id=author.id) }}"
+              type="application/atom+xml;profile=opds-catalog;kind=acquisition"/>
+    </entry>
+
+    {% for seq in seqs %}
+        <entry>
+            <title> {{ seq.title }} </title>
+            <link href="{{ url_for('.seq_books', seq_id=seq.id) }}"
+                  type="application/atom+xml;profile=opds-catalog;kind=acquisition"/>
+        </entry>
+    {% endfor %}
+</feed>

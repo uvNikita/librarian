@@ -1,9 +1,5 @@
-body {
-    padding-top: 45px;
-}
-
 .char-btn {
-    min-width: 15px;
+    min-width: 43px;
     font-family: monospace;
     padding: 10px;
     margin-bottom: 2px;

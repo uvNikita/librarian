@@ -6,11 +6,13 @@
     (url_for('.main_page'), search_term),
 ] %}
 
-{% block body %}
+{% block title %}
     <div class=page-header>
-        <h2>Books of {{ search_term }}</h2>
+        <h3>Books of {{ search_term }}</h3>
     </div>
+{% endblock %}
 
+{% block body %}
     {{ h.books_list(books_pager.items) }}
 
     {{h.render_pagination(books_pager) }}
