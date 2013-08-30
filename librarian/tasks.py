@@ -22,7 +22,7 @@ celery.conf.update(app.config)
 def with_context(task):
     @wraps(task)
     def wrapper(*args, **kwargs):
-        with app.test_request_context():
+        with app.app_context():
             return task(*args, **kwargs)
 
     return wrapper
@@ -120,22 +120,27 @@ ANNOTATION_TAG = '{%s}annotation' % FB2_NS
 @celery.task
 @with_context
 def fill_annotations(zip_path):
+    total = updated = bad = 0
     with ZipFile(zip_path, 'r') as zip_file:
         for fb2_filename in zip_file.namelist():
+            total += 1
             fb2_file = zip_file.open(fb2_filename)
             id_ = int(fb2_filename.split('.')[0])
             annotation = None
             try:
                 annotation = extract_annotation(fb2_file)
             except etree.XMLSyntaxError:
-                print 'error in', fb2_filename
+                bad += 1
+                log.warn("Not well-formed xml in %s", fb2_filename)
 
             if annotation:
                 book = Book.query.get(id_)
                 if book:
+                    updated += 1
                     book.annotation = annotation
-                    print book.id
                     db.session.flush()
+    log.info("Finish parsing annotation from %s: total(%d), updated(%d), bad(%d)",
+            zip_path, total, updated, bad)
     db.session.commit()
 
 
@@ -154,4 +159,3 @@ def extract_annotation(fb2_file):
     if root_elem is not None:
         return _trace_tree(root_elem)
     return None
-
