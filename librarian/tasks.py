@@ -96,14 +96,14 @@ def add_books_from_inp(path):
 @with_context
 def add_books_from_inpx(path):
     tmp_path = tempfile.mkdtemp(prefix='librarian.', suffix='-inpx')
-    log.info("Extracting archive {a} to {d}".format(a=path, d=tmp_path))
+    log.info(u"Extracting archive {a} to {d}".format(a=path, d=tmp_path))
     with ZipFile(path) as inpx_file:
         names = inpx_file.namelist()
         names = filter(lambda name: name.endswith('.inp'), names)
         for name in names:
             inpx_file.extract(name, tmp_path)
     log.info("Done")
-    log.info("Going to process files: {files}".format(files=names))
+    log.info(u"Going to process files: {files}".format(files=names))
     try:
         for name in names:
             inp_file_path = os.path.join(tmp_path, name)
@@ -131,7 +131,7 @@ def fill_annotations(zip_path):
                 annotation = extract_annotation(fb2_file)
             except etree.XMLSyntaxError:
                 bad += 1
-                log.warn("Not well-formed xml in %s", fb2_filename)
+                log.warn(u"Not well-formed xml in %s", fb2_filename)
 
             if annotation:
                 book = Book.query.get(id_)
@@ -140,7 +140,7 @@ def fill_annotations(zip_path):
                     book.annotation = annotation
                     db.session.flush()
     log.info("Finish parsing annotation from %s: total(%d), updated(%d), bad(%d)",
-            zip_path, total, updated, bad)
+             zip_path, total, updated, bad)
     db.session.commit()
 
 
