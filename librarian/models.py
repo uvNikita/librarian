@@ -8,15 +8,15 @@ db = SQLAlchemy()
 
 book_genre = db.Table(
     'book_genre',
-    db.Column('book_id', db.Integer, db.ForeignKey('book.id')),
-    db.Column('genre_id', db.Integer, db.ForeignKey('genre.id'))
+    db.Column('book_id', db.Integer, db.ForeignKey('book.id', ondelete='CASCADE')),
+    db.Column('genre_id', db.Integer, db.ForeignKey('genre.id', ondelete='CASCADE'))
 )
 
 
 author_book = db.Table(
     'author_book',
-    db.Column('author_id', db.Integer, db.ForeignKey('author.id')),
-    db.Column('book_id', db.Integer, db.ForeignKey('book.id'))
+    db.Column('author_id', db.Integer, db.ForeignKey('author.id', ondelete='CASCADE')),
+    db.Column('book_id', db.Integer, db.ForeignKey('book.id', ondelete='CASCADE'))
 )
 
 
