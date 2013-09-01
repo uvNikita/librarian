@@ -41,6 +41,9 @@ def add_books_from_inp(path):
         for line in inp_file:
             (unparsed_authors, gen_titles, title,
              seq_title, sequence_number, id_) = line.split('\x04')[:6]
+            # Do nothing if book already exists in library
+            if Book.query.get(id_) is not None:
+                continue
             unparsed_authors = unparsed_authors.split(':')[:-1]
             authors = []
             for unparsed_author in unparsed_authors:
@@ -142,6 +145,15 @@ def fill_annotations(zip_path):
     log.info("Finish parsing annotation from %s: total(%d), updated(%d), bad(%d)",
              zip_path, total, updated, bad)
     db.session.commit()
+
+
+@celery.task
+@with_context
+def fill_annotations_from_dir(dir_path):
+    log.info(u"Going to parse annotations from {}".format(dir_path))
+    for filename in os.listdir(dir_path):
+        if filename.endswith('.zip'):
+            fill_annotations(os.path.join(dir_path, filename))
 
 
 def extract_annotation(fb2_file):
