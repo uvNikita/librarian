@@ -132,6 +132,8 @@ def fill_annotations(zip_path):
             annotation = None
             try:
                 annotation = extract_annotation(fb2_file)
+                if annotation is not None:
+                    annotation = annotation.strip()
             except etree.XMLSyntaxError:
                 bad += 1
                 log.warn(u"Not well-formed xml in %s", fb2_filename)
