@@ -10,6 +10,7 @@ from sqlalchemy import distinct
 from conversion import fb2_2_epub
 
 from librarian.util import authors_sorted, books_sorted, seqs_sorted
+from librarian.util import get_image_filepath
 from librarian.models import author_book, Book, Author, Sequence, db
 
 
@@ -190,3 +191,11 @@ def get_epub(book_id):
     return send_file(epub_file, as_attachment=True,
                      attachment_filename=filename,
                      add_etags=False)
+
+
+@main.route('/get_image/b-<int:book_id>')
+def get_image(book_id):
+    filepath = get_image_filepath(current_app.config['IMAGE_ROOT_DIR'], book_id)
+    if not path.exists(filepath):
+        abort(404)
+    return send_file(filepath, mimetype='image/jpeg')

@@ -1,7 +1,9 @@
 #  coding: utf-8
+import os
+import errno
+import base64
 import logging
 import tempfile
-import os
 import shutil
 from functools import wraps
 from zipfile import ZipFile
@@ -10,6 +12,7 @@ from lxml import etree
 from celery import Celery
 
 from librarian import app
+from librarian.util import get_image_filepath
 from librarian.models import db, Book, Author, Genre, Sequence
 
 
@@ -118,6 +121,9 @@ def add_books_from_inpx(path):
 FB2_NS = 'http://www.gribuser.ru/xml/fictionbook/2.0'
 EMPTY_LINE_TAG = '{%s}empty-line' % FB2_NS
 ANNOTATION_TAG = '{%s}annotation' % FB2_NS
+COVERPAGE_TAG = '{%s}coverpage' % FB2_NS
+IMAGE_TAG = '{%s}image' % FB2_NS
+BINARY_TAG = '{%s}binary' % FB2_NS
 
 
 @celery.task
@@ -168,8 +174,58 @@ def extract_annotation(fb2_file):
         return text
 
     fb2_tree = etree.parse(fb2_file)
-    elems = fb2_tree.findall('.//%s' % ANNOTATION_TAG)
-    root_elem = elems[0] if elems else None
+    root_elem = fb2_tree.find('.//%s' % ANNOTATION_TAG)
     if root_elem is not None:
         return _trace_tree(root_elem)
     return None
+
+
+def extract_cover_image(fb2_file):
+    fb2_tree = etree.parse(fb2_file)
+    image = fb2_tree.find('.//%s/%s' % (COVERPAGE_TAG, IMAGE_TAG))
+    if image is None:
+        return None
+    image_id = image.attrib.get('{http://www.w3.org/1999/xlink}href')
+    if image_id:
+        image_id = image_id[1:] if image_id[0] == '#' else image_id
+        image_content_tag = fb2_tree.find(".//%s[@id='%s']" % (BINARY_TAG, image_id))
+        if image_content_tag is not None:
+            return base64.decodestring(image_content_tag.text)
+    return None
+
+
+def create_ifnot_exists(path):
+    try:
+        os.makedirs(path)
+    except OSError as exc:
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else: raise
+
+
+@celery.task
+@with_context
+def fill_cover_images(zip_path):
+    total = updated = bad = 0
+    with ZipFile(zip_path, 'r') as zip_file:
+        for fb2_filename in zip_file.namelist():
+            total += 1
+            fb2_file = zip_file.open(fb2_filename)
+            id_ = int(fb2_filename.split('.')[0])
+            image = None
+            try:
+                image = extract_cover_image(fb2_file)
+            except etree.XMLSyntaxError:
+                bad += 1
+                log.warn(u"Not well-formed xml in %s", fb2_filename)
+
+            if image is not None:
+                updated += 1
+                filepath = get_image_filepath(app.config['IMAGE_ROOT_DIR'], id_)
+                directory = os.path.dirname(filepath)
+                create_ifnot_exists(directory)
+                with open(filepath, 'w') as file:
+                    file.write(image)
+
+    log.info("Finish parsing images from %s: total(%d), updated(%d), bad(%d)",
+             zip_path, total, updated, bad)
