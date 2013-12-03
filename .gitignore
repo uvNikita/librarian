@@ -2,7 +2,7 @@ env/*
 tags
 .ropeproject
 .idea
-*.swp
+*.sw[po]
 *.pyc
 *.sublime-project
 *.sublime-workspace
