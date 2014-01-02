@@ -21,7 +21,9 @@
             </div>
         {% endif %}
     </div>
-    <img src="{{ url_for('.get_image', book_id=book.id)}}" />
+    {% if book.cover_image  %}
+        <img src="{{ url_for('.get_image', book_id=book.id, ext=book.cover_image)}}" />
+    {% endif %}
     {% if book.annotation %}
         <p> <blockquote> {{ book.annotation }} </blockquote> </p>
     {% endif %}

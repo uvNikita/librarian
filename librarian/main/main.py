@@ -2,6 +2,7 @@
 
 from os import listdir, path
 from zipfile import ZipFile
+import mimetypes
 
 from flask import redirect, url_for, send_file
 from flask import Blueprint, current_app, request, render_template, abort
@@ -15,6 +16,7 @@ from librarian.models import author_book, Book, Author, Sequence, db
 
 
 ITEMS_PER_PAGE = 50
+mimetypes.init()
 
 
 main = Blueprint('main', __name__, template_folder='templates',
@@ -193,9 +195,11 @@ def get_epub(book_id):
                      add_etags=False)
 
 
-@main.route('/get_image/b-<int:book_id>')
-def get_image(book_id):
-    filepath = get_image_filepath(current_app.config['IMAGE_ROOT_DIR'], book_id)
+@main.route('/get_image/b-<int:book_id>.<string:ext>')
+def get_image(book_id, ext):
+    ext = '.' + ext
+    filepath = get_image_filepath(current_app.config['IMAGE_ROOT_DIR'], book_id, ext=ext)
+    mimetype = mimetypes.types_map[ext]
     if not path.exists(filepath):
         abort(404)
-    return send_file(filepath, mimetype='image/jpeg')
+    return send_file(filepath, mimetype=mimetype)
