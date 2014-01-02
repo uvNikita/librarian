@@ -3,6 +3,7 @@ import os
 import errno
 import base64
 import logging
+import mimetypes
 import tempfile
 import shutil
 from functools import wraps
@@ -17,6 +18,7 @@ from librarian.models import db, Book, Author, Genre, Sequence
 
 
 log = logging.getLogger(__name__)
+mimetypes.init()
 
 celery = Celery(__name__)
 celery.conf.update(app.config)
@@ -181,7 +183,10 @@ def extract_annotation(fb2_file):
 
 
 def extract_cover_image(fb2_file):
-    fb2_tree = etree.parse(fb2_file)
+    try:
+        fb2_tree = etree.parse(fb2_file)
+    except etree.XMLSyntaxError:
+        return None
     image = fb2_tree.find('.//%s/%s' % (COVERPAGE_TAG, IMAGE_TAG))
     if image is None:
         return None
@@ -190,7 +195,9 @@ def extract_cover_image(fb2_file):
         image_id = image_id[1:] if image_id[0] == '#' else image_id
         image_content_tag = fb2_tree.find(".//%s[@id='%s']" % (BINARY_TAG, image_id))
         if image_content_tag is not None:
-            return base64.decodestring(image_content_tag.text)
+            body = base64.decodestring(image_content_tag.text)
+            mimetype = image_content_tag.attrib.get('content-type')
+            return {'body': body, 'mimetype': mimetype}
     return None
 
 
@@ -206,26 +213,27 @@ def create_ifnot_exists(path):
 @celery.task
 @with_context
 def fill_cover_images(zip_path):
-    total = updated = bad = 0
+    total = updated = 0
     with ZipFile(zip_path, 'r') as zip_file:
         for fb2_filename in zip_file.namelist():
-            total += 1
             fb2_file = zip_file.open(fb2_filename)
             id_ = int(fb2_filename.split('.')[0])
-            image = None
-            try:
-                image = extract_cover_image(fb2_file)
-            except etree.XMLSyntaxError:
-                bad += 1
-                log.warn(u"Not well-formed xml in %s", fb2_filename)
+            image_info = extract_cover_image(fb2_file)
 
-            if image is not None:
-                updated += 1
-                filepath = get_image_filepath(app.config['IMAGE_ROOT_DIR'], id_)
+            if image_info is not None:
+                extension = mimetypes.guess_extension(image_info['mimetype'])
+                extension = extension or '.jpeg'
+                filepath = get_image_filepath(app.config['IMAGE_ROOT_DIR'],
+                                              id_,
+                                              ext=extension)
                 directory = os.path.dirname(filepath)
                 create_ifnot_exists(directory)
-                with open(filepath, 'w') as file:
-                    file.write(image)
+                with open(filepath, 'wb') as file:
+                    file.write(image_info['body'])
+                Book.query.filter_by(id=id_).update({'cover_image': extension[1:]})
+                updated += 1
+            total += 1
+        db.session.commit()
 
-    log.info("Finish parsing images from %s: total(%d), updated(%d), bad(%d)",
-             zip_path, total, updated, bad)
+    log.info("Finish parsing images from %s: total(%d), updated(%d)",
+             zip_path, total, updated)
