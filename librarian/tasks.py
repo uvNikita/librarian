@@ -128,6 +128,22 @@ IMAGE_TAG = '{%s}image' % FB2_NS
 BINARY_TAG = '{%s}binary' % FB2_NS
 
 
+def extract_annotation(fb2_file):
+    def _trace_tree(tag):
+        if tag.text:
+            return tag.text
+        if tag.tag == EMPTY_LINE_TAG:
+            return '\n'
+        text = ' '.join(_trace_tree(child) for child in tag.iterchildren())
+        return text
+
+    fb2_tree = etree.parse(fb2_file)
+    root_elem = fb2_tree.find('.//%s' % ANNOTATION_TAG)
+    if root_elem is not None:
+        return _trace_tree(root_elem)
+    return None
+
+
 @celery.task
 @with_context
 def fill_annotations(zip_path):
@@ -164,22 +180,6 @@ def fill_annotations_from_dir(dir_path):
     for filename in os.listdir(dir_path):
         if filename.endswith('.zip'):
             fill_annotations(os.path.join(dir_path, filename))
-
-
-def extract_annotation(fb2_file):
-    def _trace_tree(tag):
-        if tag.text:
-            return tag.text
-        if tag.tag == EMPTY_LINE_TAG:
-            return '\n'
-        text = ' '.join(_trace_tree(child) for child in tag.iterchildren())
-        return text
-
-    fb2_tree = etree.parse(fb2_file)
-    root_elem = fb2_tree.find('.//%s' % ANNOTATION_TAG)
-    if root_elem is not None:
-        return _trace_tree(root_elem)
-    return None
 
 
 def extract_cover_image(fb2_file):
@@ -237,3 +237,12 @@ def fill_cover_images(zip_path):
 
     log.info("Finish parsing images from %s: total(%d), updated(%d)",
              zip_path, total, updated)
+
+
+@celery.task
+@with_context
+def fill_cover_images_from_dir(dir_path):
+    log.info(u"Going to parse cover images from {}".format(dir_path))
+    for filename in os.listdir(dir_path):
+        if filename.endswith('.zip'):
+            fill_cover_images(os.path.join(dir_path, filename))
