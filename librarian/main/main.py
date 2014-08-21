@@ -195,8 +195,8 @@ def get_epub(book_id):
                      add_etags=False)
 
 
-@main.route('/get_image/b-<int:book_id>.<string:ext>')
-def get_image(book_id, ext):
+@main.route('/images/b-<int:book_id>.<string:ext>')
+def images(book_id, ext):
     ext = '.' + ext
     filepath = get_image_filepath(current_app.config['IMAGE_ROOT_DIR'], book_id, ext=ext)
     mimetype = mimetypes.types_map[ext]
