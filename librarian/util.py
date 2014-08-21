@@ -38,10 +38,19 @@ def seqs_sorted(query):
     )
 
 
-def get_image_filepath(root_path, image_id, threshold=4, ext='.jpg'):
+def get_image_filepath(root_path, image_id, thresholds=(3, 2), ext='.jpg'):
     key = str(image_id)
     filename = "%d%s" % (image_id, ext)
-    return path.join(root_path, key[:-threshold], key[-threshold:], filename)
+    parts = []
+    remain_key = key
+    for threshold in thresholds:
+        parts.append(remain_key[-threshold:] or '0')
+        remain_key = remain_key[:-threshold]
+    parts.append(remain_key or '0')
+    parts.reverse()
+    parts[-1] = filename
+
+    return path.join(root_path, *parts)
 
 
 def xml_response(endpoint):
