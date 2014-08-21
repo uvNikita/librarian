@@ -21,6 +21,11 @@
             </div>
         {% endif %}
     </div>
+    {% if book.cover_image  %}
+        <img src="{{ url_for('.images', book_id=book.id, ext=book.cover_image)}}" class="cover-image"/>
+    {% else %}
+        <img src="{{ url_for('.static', filename='img/no-cover.jpg') }}" class="cover-image"/>
+    {% endif %}
     {% if book.annotation %}
         <p> <blockquote> {{ book.annotation }} </blockquote> </p>
     {% endif %}

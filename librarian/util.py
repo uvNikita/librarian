@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from os import path
 from functools import wraps
 
 from flask import request, url_for, Response
@@ -35,6 +36,21 @@ def seqs_sorted(query):
         query
         .order_by(Sequence.title)
     )
+
+
+def get_image_filepath(root_path, image_id, thresholds=(3, 2), ext='.jpg'):
+    key = str(image_id)
+    filename = "%d%s" % (image_id, ext)
+    parts = []
+    remain_key = key
+    for threshold in thresholds:
+        parts.append(remain_key[-threshold:] or '0')
+        remain_key = remain_key[:-threshold]
+    parts.append(remain_key or '0')
+    parts.reverse()
+    parts[-1] = filename
+
+    return path.join(root_path, *parts)
 
 
 def xml_response(endpoint):

@@ -81,6 +81,7 @@ class Book(db.Model):
     annotation = db.Column(db.String())
     sequence_id = db.Column(db.Integer, db.ForeignKey('sequence.id'))
     sequence_number = db.Column(db.Integer())
+    cover_image = db.Column(db.String())
     authors = db.relationship('Author', secondary=author_book,
         backref=db.backref('books', lazy='dynamic'))
     genres = db.relationship('Genre', secondary=book_genre,
