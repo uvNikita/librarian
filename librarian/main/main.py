@@ -144,8 +144,13 @@ def authors_chooser(page):
 def _get_fb2_file_by_id(book_id):
     lib_path = current_app.config['PATH_TO_LIBRARY']
     zips = [f for f in listdir(lib_path) if f.endswith('.zip')]
-    ranges = [zip_file.split('-') for zip_file in zips]
-    ranges = [[int(r[1]), int(r[2][:-4])] for r in ranges]
+    ranges = []
+    for zip_file in zips:
+        parts = zip_file.split('-')
+        try:
+            ranges.append([int(parts[1]), int(parts[2][:-4])])
+        except ValueError:
+            pass
     curr_zip = None
     for range_, zip_file in zip(ranges, zips):
         if range_[0] <= book_id <= range_[1]:
