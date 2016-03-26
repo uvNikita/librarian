@@ -177,6 +177,7 @@ def get_fb2(book_id):
     filename = '%s.fb2' % unidecode(book.title)
     return send_file(fb2_file, as_attachment=True,
                      attachment_filename=filename,
+                     mimetype='text/xml',
                      add_etags=False)
 
 
