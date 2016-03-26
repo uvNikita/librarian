@@ -19,7 +19,7 @@
                 <content type="text/html">{{ book.annotation }}</content>
             {% endif %}
             <link href="{{ url_for('main.get_fb2', book_id=book.id) }}"
-                  type="application/fb2+zip"
+                  type="application/fb2"
                   rel="http://opds-spec.org/acquisition"/>
         </entry>
     {% endfor %}
