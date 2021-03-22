@@ -3,7 +3,7 @@ Flask-SQLAlchemy==0.16
 Flask-Script==0.6.2
 SQLAlchemy==0.7.7
 consoleargs==0.3
-lxml==3.1beta1
+lxml==4.6.3
 psycopg2==2.4.5
 Unidecode==0.04.9
 celery==3.0.22
